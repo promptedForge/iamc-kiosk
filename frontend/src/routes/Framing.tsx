@@ -21,7 +21,7 @@ export default function Framing(){
     }
   }, [userRole, nav])
 
-  const handleRoleSelect = (role: 'Analyst' | 'Strategy Head') => {
+  const handleRoleSelect = (role: 'Media Team' | 'Strategy Head') => {
     setUserRole(role)
   }
 
@@ -36,10 +36,10 @@ export default function Framing(){
             <div className="text-xl font-semibold mb-6">Sign in as:</div>
             <div className="flex gap-4 justify-center">
               <button 
-                onClick={() => handleRoleSelect('Analyst')}
+                onClick={() => handleRoleSelect('Media Team')}
                 className="px-8 py-4 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold text-lg transition-all transform hover:scale-105"
               >
-                Analyst
+                Media Team
               </button>
               <button 
                 onClick={() => handleRoleSelect('Strategy Head')}

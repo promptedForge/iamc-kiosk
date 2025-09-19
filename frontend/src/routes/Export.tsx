@@ -8,7 +8,7 @@ export default function Export(){
     <div className="grid place-items-center h-screen">
       <div className="text-center space-y-3">
         <div className="text-3xl font-extrabold">Export Package</div>
-        <div className="opacity-70 text-sm">Export requires dual sign-off if enabled. Use the review bar above to sign as Analyst and Strategy Head.</div>
+        <div className="opacity-70 text-sm">Export requires dual sign-off if enabled. Use the review bar above to sign as Media Team and Strategy Head.</div>
         <div className="opacity-80">Download the full brief + assets bundle.</div>
         <button className="btn" onClick={download}>Download ZIP</button>
       </div>

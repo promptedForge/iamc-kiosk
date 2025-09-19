@@ -67,7 +67,7 @@ export default function Palette(){
             <div className="flex items-center gap-3">
               <label className="flex items-center gap-2">
                 <input type="checkbox" checked={cfg.require_dual_signoff} onChange={(e)=> update({require_dual_signoff: e.currentTarget.checked})} />
-                Require dual sign-off (Analyst + Strategy Head)
+                Require dual sign-off (Media Team + Strategy Head)
               </label>
               <label className="flex items-center gap-2 opacity-70">
                 <input type="checkbox" checked={cfg.autopublish} onChange={(e)=> update({autopublish: e.currentTarget.checked})} disabled />

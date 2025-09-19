@@ -1,80 +1,80 @@
 [
   {
-    "id": "energy-20250919",
-    "title": "New Energy Regulation Draft Released",
-    "quadrant": "Policy",
+    "id": "farmers-20250919",
+    "title": "Farmer Union Protests Escalate in Punjab",
+    "quadrant": "Advocacy",
     "score": 0.92,
-    "visibility": ["Analyst", "Strategy Head"],
+    "visibility": ["Media Team", "Strategy Head"],
     "priority": "high"
   },
   {
     "id": "labor-20250919",
-    "title": "Labor Coalition Announces Nationwide Actions",
-    "quadrant": "Advocacy",
+    "title": "Garment Workers Strike Over Wage Violations",
+    "quadrant": "Risk",
     "score": 0.81,
-    "visibility": ["Analyst", "Strategy Head"],
-    "priority": "medium"
+    "visibility": ["Media Team", "Strategy Head"],
+    "priority": "high"
   },
   {
-    "id": "market-20250919",
-    "title": "Industry Consolidation Rumors Surface",
-    "quadrant": "Industry",
+    "id": "tribal-20250919",
+    "title": "Tribal Land Rights Case Filed in Supreme Court",
+    "quadrant": "Policy",
     "score": 0.76,
     "visibility": ["Strategy Head"],
     "priority": "high"
   },
   {
-    "id": "safety-20250919",
-    "title": "Facility Safety Incident Trends Rise",
+    "id": "child-20250919",
+    "title": "Child Labor in Mica Mines Under Investigation",
     "quadrant": "Risk",
-    "score": 0.71,
-    "visibility": ["Analyst"],
+    "score": 0.89,
+    "visibility": ["Media Team"],
+    "priority": "critical"
+  },
+  {
+    "id": "press-20250919",
+    "title": "Journalist Arrests Raise Press Freedom Concerns",
+    "quadrant": "Risk",
+    "score": 0.85,
+    "visibility": ["Media Team", "Strategy Head"],
+    "priority": "critical"
+  },
+  {
+    "id": "dalit-20250919",
+    "title": "Dalit Rights Activists Face Legal Challenges",
+    "quadrant": "Advocacy",
+    "score": 0.73,
+    "visibility": ["Media Team"],
     "priority": "medium"
   },
   {
-    "id": "cyber-20250919",
-    "title": "Critical Infrastructure Cyber Alert",
+    "id": "women-20250919",
+    "title": "Women's Safety Protests in Major Cities",
+    "quadrant": "Advocacy",
+    "score": 0.88,
+    "visibility": ["Media Team", "Strategy Head"],
+    "priority": "high"
+  },
+  {
+    "id": "environ-20250919",
+    "title": "Environmental Activists Detained in Chhattisgarh",
     "quadrant": "Risk",
-    "score": 0.89,
-    "visibility": ["Analyst"],
-    "priority": "critical"
-  },
-  {
-    "id": "merger-20250919",
-    "title": "Major Competitor Acquisition Leaked",
-    "quadrant": "Industry",
-    "score": 0.95,
-    "visibility": ["Strategy Head"],
-    "priority": "critical"
-  },
-  {
-    "id": "tech-20250919",
-    "title": "AI Regulatory Framework Proposed",
-    "quadrant": "Policy",
-    "score": 0.68,
-    "visibility": ["Analyst"],
-    "priority": "low"
-  },
-  {
-    "id": "esg-20250919",
-    "title": "ESG Reporting Standards Update",
-    "quadrant": "Policy",
     "score": 0.74,
     "visibility": ["Strategy Head"],
     "priority": "medium"
   },
   {
-    "id": "supply-20250919",
-    "title": "Supply Chain Disruption Alert",
-    "quadrant": "Risk",
+    "id": "migrant-20250919",
+    "title": "Migrant Worker Rights Violations Documented",
+    "quadrant": "Policy",
     "score": 0.83,
-    "visibility": ["Analyst", "Strategy Head"],
+    "visibility": ["Media Team", "Strategy Head"],
     "priority": "high"
   },
   {
-    "id": "activist-20250919",
-    "title": "Shareholder Activist Campaign Detected",
-    "quadrant": "Advocacy",
+    "id": "minority-20250919",
+    "title": "Religious Minority Protection Laws Under Review",
+    "quadrant": "Policy",
     "score": 0.77,
     "visibility": ["Strategy Head"],
     "priority": "high"

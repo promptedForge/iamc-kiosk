@@ -21,16 +21,18 @@ export default function Radar(){
   // Simulate real-time updates
   useEffect(() => {
     const messages = [
-      { text: "Labor rights violation reported at facility", source: "Reuters", location: "Bangladesh, Dhaka" },
-      { text: "New EU supply chain due diligence law passed", source: "EU Parliament", location: "Brussels, Belgium" },
-      { text: "Worker strike over safety conditions", source: "Local News Network", location: "Myanmar, Yangon" },
-      { text: "Child labor allegations in cobalt mines", source: "Human Rights Watch", location: "DRC, Katanga" },
-      { text: "Forced overtime complaints filed with ILO", source: "ILO Database", location: "Vietnam, Ho Chi Minh" },
-      { text: "Living wage protests at textile factories", source: "AFP", location: "Cambodia, Phnom Penh" },
-      { text: "New California supply chain transparency act", source: "CA Legislature", location: "USA, California" },
-      { text: "Migrant worker exploitation investigation", source: "Al Jazeera", location: "Qatar, Doha" },
-      { text: "Factory audit reveals safety violations", source: "Fair Labor Association", location: "India, Tamil Nadu" },
-      { text: "UN Global Compact compliance update", source: "UN News", location: "Global" }
+      { text: "Farmer protests over agricultural laws intensify", source: "The Hindu", location: "India, New Delhi" },
+      { text: "Dalit rights activists detained in Karnataka", source: "NDTV", location: "India, Bengaluru" },
+      { text: "Factory workers strike over unpaid wages", source: "Indian Express", location: "India, Tamil Nadu" },
+      { text: "Tribal land rights violation reported in Odisha", source: "Human Rights Watch", location: "India, Bhubaneswar" },
+      { text: "Child labor found in mica mining operations", source: "Reuters", location: "India, Jharkhand" },
+      { text: "Women garment workers protest unsafe conditions", source: "The Wire", location: "India, Bengaluru" },
+      { text: "Press freedom concerns after journalist arrests", source: "RSF", location: "India, Kashmir" },
+      { text: "Migrant worker exploitation during lockdown", source: "Scroll.in", location: "India, Mumbai" },
+      { text: "Environmental activists face sedition charges", source: "BBC India", location: "India, Chhattisgarh" },
+      { text: "Bonded labor rescued from brick kilns", source: "Times of India", location: "India, Uttar Pradesh" },
+      { text: "Religious minority rights violations reported", source: "Amnesty International", location: "India, Gujarat" },
+      { text: "Manual scavenging continues despite ban", source: "Al Jazeera", location: "India, Rajasthan" }
     ]
     
     const interval = setInterval(() => {
@@ -53,8 +55,8 @@ export default function Radar(){
     }
   }
 
-  const otherRole = userRole === 'Analyst' ? 'Strategy Head' : 'Analyst'
-  const canRequestSignoff = !signoffs[otherRole as 'Analyst' | 'Strategy Head']
+  const otherRole = userRole === 'Media Team' ? 'Strategy Head' : 'Media Team'
+  const canRequestSignoff = !signoffs[otherRole as 'Media Team' | 'Strategy Head']
 
   return (
     <div className="px-10 py-20 min-h-screen bg-navy relative">
@@ -63,7 +65,7 @@ export default function Radar(){
         <div className="text-sm opacity-70 mb-1">Signed in as</div>
         <div className="text-lg font-bold mb-3">{userRole}</div>
         <div className="space-y-1 text-sm">
-          <div>Analyst: {signoffs.Analyst ? '✅' : '❌'}</div>
+          <div>Media Team: {signoffs['Media Team'] ? '✅' : '❌'}</div>
           <div>Strategy Head: {signoffs['Strategy Head'] ? '✅' : '❌'}</div>
         </div>
         {canRequestSignoff && (

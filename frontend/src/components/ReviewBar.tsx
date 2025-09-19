@@ -11,18 +11,18 @@ export default function ReviewBar(){
     setStatus(data)
     // Sync signoff status with global state
     if (data?.signoff) {
-      updateSignoff('Analyst', data.signoff['Analyst'] || false)
+      updateSignoff('Media Team', data.signoff['Media Team'] || false)
       updateSignoff('Strategy Head', data.signoff['Strategy Head'] || false)
     }
   }
   
   useEffect(()=> { refresh(); const t = setInterval(refresh, 3000); return ()=> clearInterval(t) }, [])
 
-  const analyst = signoffs.Analyst ? '✅' : '❌'
-  const strat   = signoffs['Strategy Head'] ? '✅' : '❌'
+  const mediaTeam = signoffs['Media Team'] ? '✅' : '⬜'
+  const strat   = signoffs['Strategy Head'] ? '✅' : '⬜'
   const paused  = status?.human_interrupt_active
 
-  async function sign(role: 'Analyst'|'Strategy Head'){ 
+  async function sign(role: 'Media Team'|'Strategy Head'){ 
     if (userRole === role) {
       await fetch(`${API}/review/signoff`, {
         method:'POST', 
@@ -46,9 +46,9 @@ export default function ReviewBar(){
           <button className="btn" onClick={()=> paused ? resume() : interrupt()}>{paused?'Resume':'Interrupt'}</button>
         </div>
         <div className="flex items-center gap-4">
-          <span>Analyst: {analyst}</span>
-          {userRole === 'Analyst' && !signoffs.Analyst && (
-            <button className="btn" onClick={()=> sign('Analyst')}>Sign as Analyst</button>
+          <span>Media Team: {mediaTeam}</span>
+          {userRole === 'Media Team' && !signoffs['Media Team'] && (
+            <button className="btn" onClick={()=> sign('Media Team')}>Sign as Media Team</button>
           )}
           <span>Strategy Head: {strat}</span>
           {userRole === 'Strategy Head' && !signoffs['Strategy Head'] && (

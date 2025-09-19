@@ -1,13 +1,13 @@
 import { create } from 'zustand'
 
 interface AppState {
-  userRole: 'Analyst' | 'Strategy Head' | null
-  setUserRole: (role: 'Analyst' | 'Strategy Head' | null) => void
+  userRole: 'Media Team' | 'Strategy Head' | null
+  setUserRole: (role: 'Media Team' | 'Strategy Head' | null) => void
   signoffs: {
-    Analyst: boolean
+    'Media Team': boolean
     'Strategy Head': boolean
   }
-  updateSignoff: (role: 'Analyst' | 'Strategy Head', value: boolean) => void
+  updateSignoff: (role: 'Media Team' | 'Strategy Head', value: boolean) => void
   reset: () => void
 }
 
@@ -15,7 +15,7 @@ export const useStore = create<AppState>((set) => ({
   userRole: null,
   setUserRole: (role) => set({ userRole: role }),
   signoffs: {
-    Analyst: false,
+    'Media Team': false,
     'Strategy Head': false
   },
   updateSignoff: (role, value) => set((state) => ({
@@ -27,7 +27,7 @@ export const useStore = create<AppState>((set) => ({
   reset: () => set({
     userRole: null,
     signoffs: {
-      Analyst: false,
+      'Media Team': false,
       'Strategy Head': false
     }
   })
