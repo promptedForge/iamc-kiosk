@@ -79,8 +79,8 @@ COPY backend/examples /app/examples
 RUN rm /etc/nginx/sites-enabled/default
 COPY <<EOF /etc/nginx/sites-available/iamc
 server {
-    listen 8080;
-    listen [::]:8080;
+    listen 80;
+    listen [::]:80;
     server_name _;
     
     # Frontend
@@ -154,13 +154,13 @@ EOF
 RUN chown -R appuser:appuser /app && \
     chmod +x /usr/local/bin/iamc-api
 
-# Railway uses PORT env var, but we'll use 8080
-ENV PORT=8080
-EXPOSE 8080
+# Railway uses PORT env var
+ENV PORT=80
+EXPOSE 80
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD curl -f http://localhost:8080/health || exit 1
+    CMD curl -f http://localhost/health || exit 1
 
 # Start supervisor
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
