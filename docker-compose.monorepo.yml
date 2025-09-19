@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  iamc-platform:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+      args:
+        BUILD_DATE: ${BUILD_DATE:-$(date -u +'%Y-%m-%dT%H:%M:%SZ')}
+        VCS_REF: ${VCS_REF:-$(git rev-parse --short HEAD)}
+        VERSION: ${VERSION:-0.4.0}
+    ports:
+      - "8080:80"
+    environment:
+      - RUST_LOG=info
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - iamc-net
+    volumes:
+      # Optional: Mount examples for easy updates
+      - ./backend/examples:/app/examples:ro
+
+  # Development version with more tools
+  iamc-platform-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - "8081:80"
+    environment:
+      - RUST_LOG=debug
+      - NODE_ENV=development
+    volumes:
+      - ./backend/examples:/app/examples:ro
+      # Mount source for hot reload (requires app restart)
+      - ./backend/api/src:/app/api/src:ro
+      - ./backend/engine/src:/app/engine/src:ro
+    networks:
+      - iamc-net
+    profiles:
+      - development
+
+  # Optional: Separate database for future production use
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=iamc
+      - POSTGRES_USER=iamc
+      - POSTGRES_PASSWORD=secure_password_here
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - iamc-net
+    profiles:
+      - production
+
+  # Optional: Redis for caching
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - iamc-net
+    profiles:
+      - production
+
+networks:
+  iamc-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
