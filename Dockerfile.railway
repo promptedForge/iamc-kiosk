@@ -1,0 +1,166 @@
+# Railway-specific Monorepo Dockerfile
+# Fixes common issues with Railway's network configuration
+
+# ==============================================================================
+# Stage 1: Rust Backend Builder
+# ==============================================================================
+FROM rust:1.81 as backend-builder
+WORKDIR /build
+
+# Copy backend workspace files
+COPY backend/Cargo.toml ./
+COPY backend/api/Cargo.toml ./api/
+COPY backend/engine/Cargo.toml ./engine/
+
+# Create dummy source files to cache dependencies
+RUN mkdir -p api/src engine/src && \
+    echo "fn main() {}" > api/src/main.rs && \
+    echo "pub fn lib() {}" > engine/src/lib.rs
+
+# Build dependencies (this layer will be cached)
+RUN cargo build --release -p api
+
+# Copy actual source code
+COPY backend/api/src ./api/src
+COPY backend/engine/src ./engine/src
+
+# Touch source files to ensure they're newer than dummy files
+RUN touch api/src/main.rs engine/src/lib.rs
+
+# Build the actual application
+RUN cargo build --release -p api
+
+# ==============================================================================
+# Stage 2: Frontend Builder
+# ==============================================================================
+FROM node:20-alpine as frontend-builder
+WORKDIR /build
+
+# Copy package files
+COPY frontend/package.json frontend/package-lock.json* ./
+
+# Install dependencies
+RUN npm ci || npm install
+
+# Copy frontend source
+COPY frontend/ ./
+
+# Build the frontend with correct API path
+ENV VITE_API_URL=/api
+RUN npm run build
+
+# ==============================================================================
+# Stage 3: Production Runtime
+# ==============================================================================
+FROM debian:bookworm-slim as runtime
+WORKDIR /app
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    curl \
+    supervisor \
+    nginx \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN useradd -m -u 1000 -s /bin/bash appuser
+
+# Copy backend binary
+COPY --from=backend-builder /build/target/release/api /usr/local/bin/iamc-api
+
+# Copy frontend build
+COPY --from=frontend-builder /build/dist /var/www/html
+
+# Copy example data for backend
+COPY backend/examples /app/examples
+
+# Configure Nginx for Railway
+RUN rm /etc/nginx/sites-enabled/default
+COPY <<EOF /etc/nginx/sites-available/iamc
+server {
+    listen 8080;
+    listen [::]:8080;
+    server_name _;
+    
+    # Frontend
+    location / {
+        root /var/www/html;
+        try_files \$uri \$uri/ /index.html;
+        add_header Cache-Control "no-cache, no-store, must-revalidate";
+    }
+    
+    # API proxy - Railway fix: use 0.0.0.0
+    location /api/ {
+        proxy_pass http://0.0.0.0:8787/;
+        proxy_http_version 1.1;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+    
+    # Health check endpoint
+    location /health {
+        access_log off;
+        return 200 "healthy\\n";
+        add_header Content-Type text/plain;
+    }
+}
+EOF
+RUN ln -s /etc/nginx/sites-available/iamc /etc/nginx/sites-enabled/
+
+# Configure Nginx to run as non-root
+RUN sed -i 's/user www-data;/user appuser;/' /etc/nginx/nginx.conf && \
+    touch /run/nginx.pid && \
+    chown -R appuser:appuser /var/log/nginx /var/lib/nginx /run/nginx.pid /var/www/html
+
+# Configure Supervisor for Railway
+COPY <<EOF /etc/supervisor/conf.d/iamc.conf
+[supervisord]
+nodaemon=true
+user=root
+logfile=/dev/stdout
+logfile_maxbytes=0
+loglevel=info
+
+[program:nginx]
+command=/usr/sbin/nginx -g "daemon off;"
+autostart=true
+autorestart=true
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+user=appuser
+
+[program:api]
+command=/usr/local/bin/iamc-api --mock --examples /app/examples --addr 0.0.0.0:8787
+directory=/app
+autostart=true
+autorestart=true
+user=appuser
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+environment=RUST_LOG="%(ENV_RUST_LOG)s",PORT="8787"
+EOF
+
+# Set permissions
+RUN chown -R appuser:appuser /app && \
+    chmod +x /usr/local/bin/iamc-api
+
+# Railway uses PORT env var, but we'll use 8080
+ENV PORT=8080
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
+
+# Start supervisor
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
