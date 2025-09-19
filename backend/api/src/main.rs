@@ -1,0 +1,151 @@
+use axum::{routing::{get, post}, Json, Router, extract::{Path, Query, State}};
+use axum::http::StatusCode;
+use clap::Parser;
+use engine::{Config, IngestStatus, Issue, Brief, LensBrief, Assets, Roi, UiConfig, RuntimeState, load_ui_config, save_ui_config, load_runtime, save_runtime, list_learn_samples, save_learn_sample};
+use std::{net::SocketAddr, sync::Arc};
+use tower_http::cors::{CorsLayer, Any};
+use serde::Deserialize;
+use tracing::{info, error};
+use anyhow::Result;
+use base64::Engine;
+
+#[derive(Clone)]
+struct AppState { cfg: Arc<Config> }
+
+#[derive(Parser, Debug)]
+#[command(name="iamc-sidecar", version, about="Axum sidecar for IAMC executive mode")]
+struct Args {
+    #[arg(long, default_value="0.0.0.0:8787")]
+    addr: String,
+    #[arg(long, default_value_t=false)]
+    mock: bool,
+    #[arg(long, default_value="../examples")]
+    examples: String,
+}
+
+#[derive(Deserialize)] struct LensQuery { lens: Option<String>, mock: Option<bool> }
+#[derive(Deserialize)] struct MockQuery { mock: Option<bool> }
+#[derive(Deserialize)] struct ConfigBody { cadence: Option<String>, time_of_day: Option<String>, days_of_week: Option<Vec<String>>, audiences: Option<Vec<String>>, require_dual_signoff: Option<bool>, autopublish: Option<bool> }
+#[derive(Deserialize)] struct SignoffBody { role: String, approve: bool }
+#[derive(Deserialize)] struct UploadBody { filename: String, content_base64: String }
+#[derive(Deserialize)] struct GenerateReq { brief: engine::Brief, audience: Option<String> }
+
+#[tokio::main]
+async fn main() -> Result<()> {
+    tracing_subscriber::fmt().with_env_filter("info").init();
+    let args = Args::parse();
+    let cfg = Config::from_env(args.examples.clone(), args.mock);
+    let state = AppState { cfg: Arc::new(cfg) };
+
+    let cors = CorsLayer::new().allow_methods(Any).allow_headers(Any).allow_origin(Any);
+    let app = Router::new()
+        .route("/ingest/status", get(ingest_status))
+        .route("/classify/today", get(classify_today))
+        .route("/brief/:id", get(brief))
+        .route("/assets/generate", post(assets_generate))
+        .route("/roi/today", get(roi_today))
+        .route("/export/:id", post(export_zip))
+        .route("/config", get(get_config).post(set_config))
+        .route("/review/status", get(review_status))
+        .route("/review/interrupt", post(review_interrupt))
+        .route("/review/resume", post(review_resume))
+        .route("/review/signoff", post(review_signoff))
+        .route("/learn/samples", get(learn_samples))
+        .route("/learn/upload", post(learn_upload))
+        .with_state(state)
+        .layer(cors);
+
+    let addr: SocketAddr = args.addr.parse().expect("valid addr");
+    info!("Serving on http://{}", addr);
+    axum::serve(tokio::net::TcpListener::bind(addr).await?, app).await?;
+    Ok(())
+}
+
+async fn ingest_status(State(st): State<AppState>, Query(_): Query<MockQuery>) -> Result<Json<IngestStatus>, (StatusCode, String)> {
+    engine::load_ingest_status(&st.cfg).await.map(Json).map_err(err500)
+}
+async fn classify_today(State(st): State<AppState>, Query(_): Query<MockQuery>) -> Result<Json<Vec<Issue>>, (StatusCode, String)> {
+    engine::classify_today(&st.cfg).await.map(Json).map_err(err500)
+}
+async fn brief(State(st): State<AppState>, Path(id): Path<String>, Query(q): Query<LensQuery>) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
+    if let Some(lens) = q.lens {
+        let lb: LensBrief = engine::lens_brief(&st.cfg, &id, &lens).await.map_err(err500)?;
+        Ok(Json(serde_json::to_value(lb).unwrap()))
+    } else {
+        let b: Brief = engine::load_brief(&st.cfg, &id).await.map_err(err500)?;
+        Ok(Json(serde_json::to_value(b).unwrap()))
+    }
+}
+async fn assets_generate(State(st): State<AppState>, Json(req): Json<GenerateReq>) -> Result<Json<Assets>, (StatusCode, String)> {
+    engine::generate_assets(&st.cfg, &req.brief, req.audience.as_deref()).await.map(Json).map_err(err500)
+}
+async fn roi_today(State(st): State<AppState>) -> Result<Json<Roi>, (StatusCode, String)> {
+    let issues = engine::classify_today(&st.cfg).await.map_err(err500)?;
+    engine::roi_today(&st.cfg, issues.len()).await.map(Json).map_err(err500)
+}
+async fn export_zip(State(st): State<AppState>, Path(id): Path<String>) -> Result<(axum::http::HeaderMap, Vec<u8>), (StatusCode, String)> {
+    // review gating
+    let cfg_ui = load_ui_config(&st.cfg).map_err(err500)?;
+    let rstate = load_runtime(&st.cfg).map_err(err500)?;
+    if rstate.human_interrupt_active {
+        return Err((StatusCode::CONFLICT, "Export blocked: Human interrupt active".into()));
+    }
+    if cfg_ui.require_dual_signoff {
+        let a = rstate.signoff.get("Analyst").copied().unwrap_or(false);
+        let s = rstate.signoff.get("Strategy Head").copied().unwrap_or(false);
+        if !(a && s) {
+            return Err((StatusCode::FORBIDDEN, "Export blocked: Dual signoff required".into()));
+        }
+    }
+    use std::io::Read;
+    let b = engine::load_brief(&st.cfg, &id).await.map_err(err500)?;
+    let a = engine::generate_assets(&st.cfg, &b, None).await.map_err(err500)?;
+    let tmp = tempfile::NamedTempFile::new().map_err(err500)?;
+    let path = tmp.path().to_path_buf();
+    engine::build_zip_export(&b, &a, &path).map_err(err500)?;
+    let mut f = std::fs::File::open(path).map_err(err500)?;
+    let mut buf = vec![]; f.read_to_end(&mut buf).map_err(err500)?;
+    let mut headers = axum::http::HeaderMap::new();
+    headers.insert(axum::http::header::CONTENT_TYPE, "application/zip".parse().unwrap());
+    headers.insert(axum::http::header::CONTENT_DISPOSITION, format!("attachment; filename=iamc_export_{}.zip", id).parse().unwrap());
+    Ok((headers, buf))
+}
+
+async fn get_config(State(st): State<AppState>) -> Result<Json<UiConfig>, (StatusCode, String)> {
+    load_ui_config(&st.cfg).map(Json).map_err(err500)
+}
+async fn set_config(State(st): State<AppState>, Json(body): Json<ConfigBody>) -> Result<Json<UiConfig>, (StatusCode, String)> {
+    let mut c = load_ui_config(&st.cfg).map_err(err500)?;
+    if let Some(v)=body.cadence { c.cadence = v; }
+    if let Some(v)=body.time_of_day { c.time_of_day = v; }
+    if let Some(v)=body.days_of_week { c.days_of_week = v; }
+    if let Some(v)=body.audiences { c.audiences = v; }
+    if let Some(v)=body.require_dual_signoff { c.require_dual_signoff = v; }
+    if let Some(v)=body.autopublish { c.autopublish = v; }
+    save_ui_config(&st.cfg, &c).map_err(err500)?; Ok(Json(c))
+}
+
+async fn review_status(State(st): State<AppState>) -> Result<Json<RuntimeState>, (StatusCode, String)> {
+    load_runtime(&st.cfg).map(Json).map_err(err500)
+}
+async fn review_interrupt(State(st): State<AppState>) -> Result<Json<RuntimeState>, (StatusCode, String)> {
+    let mut r = load_runtime(&st.cfg).map_err(err500)?; r.human_interrupt_active = true; save_runtime(&st.cfg, &r).map_err(err500)?; Ok(Json(r))
+}
+async fn review_resume(State(st): State<AppState>) -> Result<Json<RuntimeState>, (StatusCode, String)> {
+    let mut r = load_runtime(&st.cfg).map_err(err500)?; r.human_interrupt_active = false; save_runtime(&st.cfg, &r).map_err(err500)?; Ok(Json(r))
+}
+async fn review_signoff(State(st): State<AppState>, Json(b): Json<SignoffBody>) -> Result<Json<RuntimeState>, (StatusCode, String)> {
+    let mut r = load_runtime(&st.cfg).map_err(err500)?; r.signoff.insert(b.role, b.approve); save_runtime(&st.cfg, &r).map_err(err500)?; Ok(Json(r))
+}
+
+async fn learn_samples(State(st): State<AppState>) -> Result<Json<Vec<engine::LearnSample>>, (StatusCode, String)> {
+    list_learn_samples(&st.cfg).map(Json).map_err(err500)
+}
+async fn learn_upload(State(st): State<AppState>, Json(b): Json<UploadBody>) -> Result<Json<engine::LearnSample>, (StatusCode, String)> {
+    let bytes = base64::engine::general_purpose::STANDARD.decode(b.content_base64).map_err(err500)?;
+    let s = save_learn_sample(&st.cfg, &b.filename, &bytes).map_err(err500)?; Ok(Json(s))
+}
+
+fn err500<E: std::fmt::Display>(e: E) -> (StatusCode, String) {
+    error!("error: {}", e); (StatusCode::INTERNAL_SERVER_ERROR, format!("{}", e))
+}

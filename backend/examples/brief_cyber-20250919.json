@@ -1,0 +1,45 @@
+{
+  "id": "cyber-20250919",
+  "title": "Critical Infrastructure Cyber Alert: Immediate Action Required",
+  "summary": "CISA has issued a critical alert regarding active exploitation of industrial control systems affecting our sector. Immediate defensive measures required.",
+  "risks": [
+    "Active exploitation in the wild confirmed",
+    "Our systems use affected components",
+    "Patch deployment may cause operational disruption",
+    "Supply chain partners also vulnerable"
+  ],
+  "opportunities": [
+    "Demonstrate security leadership to stakeholders",
+    "Strengthen vendor security requirements",
+    "Accelerate zero-trust architecture rollout",
+    "Collaborative defense with sector peers"
+  ],
+  "recommendations": [
+    "Deploy emergency patches by EOD",
+    "Isolate critical systems immediately",
+    "Activate incident response team",
+    "Coordinate with CISA and FBI liaisons"
+  ],
+  "evidence": [
+    {
+      "source": "CISA Alert AA25-019A",
+      "url": "https://cisa.gov/alerts/aa25-019a",
+      "confidence": 1.0
+    },
+    {
+      "source": "Threat Intelligence Platform",
+      "url": "internal-tip",
+      "confidence": 0.91
+    }
+  ],
+  "technical_details": {
+    "cve_ids": ["CVE-2025-1234", "CVE-2025-1235"],
+    "affected_systems": "Schneider Electric Modicon PLCs",
+    "exploit_complexity": "Low - script kiddie capable",
+    "indicators_of_compromise": [
+      "Unusual outbound connections on port 502",
+      "Modified ladder logic without authorization",
+      "Anomalous SCADA historian queries"
+    ]
+  }
+}

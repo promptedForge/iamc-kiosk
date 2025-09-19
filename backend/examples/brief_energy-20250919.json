@@ -1,0 +1,32 @@
+{
+  "id": "energy-20250919",
+  "title": "Energy Regulation Draft: Immediate Implications",
+  "summary": "The draft introduces phased compliance that raises near-term uncertainty but opens avenues for pilot program funding.",
+  "risks": [
+    "Short-term compliance ambiguity for members",
+    "Potential press mischaracterization of IAMC stance",
+    "Operational retooling for mid-size facilities"
+  ],
+  "opportunities": [
+    "Leverage pilot programs to shape final language",
+    "Position IAMC as a standards partner",
+    "Strengthen member onboarding to new reporting tools"
+  ],
+  "recommendations": [
+    "Publish neutral explainer within 2 hours",
+    "Schedule coalition roundtable within 48 hours",
+    "Identify 3 pilot candidates for early engagement"
+  ],
+  "evidence": [
+    {
+      "source": "Federal Register (Draft)",
+      "url": "https://example.gov/energy/draft",
+      "confidence": 0.86
+    },
+    {
+      "source": "Major Outlet Coverage",
+      "url": "https://news.example.com/energy-draft",
+      "confidence": 0.74
+    }
+  ]
+}

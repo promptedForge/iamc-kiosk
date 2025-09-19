@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  sidecar:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    ports: 
+      - "8787:8787"
+    networks:
+      - iamc-network
+    restart: unless-stopped
+
+  kiosk:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    environment:
+      - VITE_API_URL=http://sidecar:8787
+    ports: 
+      - "5173:5173"
+    networks:
+      - iamc-network
+    depends_on:
+      - sidecar
+    restart: unless-stopped
+
+networks:
+  iamc-network:
+    driver: bridge

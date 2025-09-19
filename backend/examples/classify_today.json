@@ -1,0 +1,82 @@
+[
+  {
+    "id": "energy-20250919",
+    "title": "New Energy Regulation Draft Released",
+    "quadrant": "Policy",
+    "score": 0.92,
+    "visibility": ["Analyst", "Strategy Head"],
+    "priority": "high"
+  },
+  {
+    "id": "labor-20250919",
+    "title": "Labor Coalition Announces Nationwide Actions",
+    "quadrant": "Advocacy",
+    "score": 0.81,
+    "visibility": ["Analyst", "Strategy Head"],
+    "priority": "medium"
+  },
+  {
+    "id": "market-20250919",
+    "title": "Industry Consolidation Rumors Surface",
+    "quadrant": "Industry",
+    "score": 0.76,
+    "visibility": ["Strategy Head"],
+    "priority": "high"
+  },
+  {
+    "id": "safety-20250919",
+    "title": "Facility Safety Incident Trends Rise",
+    "quadrant": "Risk",
+    "score": 0.71,
+    "visibility": ["Analyst"],
+    "priority": "medium"
+  },
+  {
+    "id": "cyber-20250919",
+    "title": "Critical Infrastructure Cyber Alert",
+    "quadrant": "Risk",
+    "score": 0.89,
+    "visibility": ["Analyst"],
+    "priority": "critical"
+  },
+  {
+    "id": "merger-20250919",
+    "title": "Major Competitor Acquisition Leaked",
+    "quadrant": "Industry",
+    "score": 0.95,
+    "visibility": ["Strategy Head"],
+    "priority": "critical"
+  },
+  {
+    "id": "tech-20250919",
+    "title": "AI Regulatory Framework Proposed",
+    "quadrant": "Policy",
+    "score": 0.68,
+    "visibility": ["Analyst"],
+    "priority": "low"
+  },
+  {
+    "id": "esg-20250919",
+    "title": "ESG Reporting Standards Update",
+    "quadrant": "Policy",
+    "score": 0.74,
+    "visibility": ["Strategy Head"],
+    "priority": "medium"
+  },
+  {
+    "id": "supply-20250919",
+    "title": "Supply Chain Disruption Alert",
+    "quadrant": "Risk",
+    "score": 0.83,
+    "visibility": ["Analyst", "Strategy Head"],
+    "priority": "high"
+  },
+  {
+    "id": "activist-20250919",
+    "title": "Shareholder Activist Campaign Detected",
+    "quadrant": "Advocacy",
+    "score": 0.77,
+    "visibility": ["Strategy Head"],
+    "priority": "high"
+  }
+]

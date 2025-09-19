@@ -1,0 +1,203 @@
+# Agent Hook Configuration - Dual-Track Development System
+
+# Global hook configuration for multi-agent coordination
+version: "1.0"
+agents:
+  - dual-track-architect
+  - kiosk-demo-executor  
+  - prod-rust-implementor
+
+# Master hooks that apply to all agents
+global_hooks:
+  pre_execution:
+    - name: verify_agent_authorization
+      description: Ensure agent is authorized for requested operation
+      script: |
+        #!/bin/bash
+        AGENT_TYPE=$1
+        OPERATION=$2
+        # Verify agent covenant file exists
+        if [ ! -f "${AGENT_TYPE}.CLAUDE.md" ]; then
+          echo "ERROR: No covenant found for agent ${AGENT_TYPE}"
+          exit 1
+        fi
+
+  post_execution:
+    - name: track_compliance_metrics
+      description: Log agent actions for compliance tracking
+      script: |
+        #!/bin/bash
+        echo "[$(date)] Agent: $1, Action: $2, Status: $3" >> .claude/agent-audit.log
+
+# Architect-specific approval gates
+dual_track_architect_hooks:
+  feature_assignment:
+    - name: validate_track_assignment
+      description: Ensure features are assigned to correct track
+      required_fields: ["feature_name", "target_track", "justification"]
+      validation_script: |
+        #!/bin/bash
+        TRACK=$1
+        if [[ "$TRACK" != "demo" && "$TRACK" != "production" ]]; then
+          echo "ERROR: Invalid track assignment. Must be 'demo' or 'production'"
+          exit 1
+        fi
+    
+  architecture_review:
+    - name: check_cross_contamination
+      description: Prevent dependencies between tracks
+      validation_script: |
+        #!/bin/bash
+        # Check for forbidden cross-references
+        grep -r "import.*from.*demo" ./production && {
+          echo "ERROR: Production importing from demo track"
+          exit 1
+        }
+        grep -r "import.*from.*production" ./demo && {
+          echo "ERROR: Demo importing from production track"
+          exit 1
+        }
+
+# Demo executor constraints
+kiosk_demo_executor_hooks:
+  pre_implementation:
+    - name: enforce_timeline_limit
+      description: Ensure 2-week maximum timeline
+      validation_script: |
+        #!/bin/bash
+        ESTIMATED_DAYS=$1
+        if [ "$ESTIMATED_DAYS" -gt 14 ]; then
+          echo "ERROR: Feature exceeds 2-week limit"
+          echo "REQUIRED: Approval from dual-track-architect"
+          exit 1
+        fi
+    
+    - name: check_forbidden_dependencies
+      description: Block production-grade dependencies
+      forbidden_packages:
+        - "@sentry/*"     # No error monitoring
+        - "sequelize"     # No ORMs
+        - "passport"      # No auth frameworks
+        - "redis"         # No external data stores
+        - "winston"       # No production logging
+
+  mid_sprint:
+    - name: progress_checkpoint
+      description: Verify on-track for demo deadline
+      day_triggers: [5, 10]
+      validation_script: |
+        #!/bin/bash
+        PROGRESS_PERCENT=$1
+        DAY=$2
+        MIN_EXPECTED=$((DAY * 7))  # 7% per day minimum
+        if [ "$PROGRESS_PERCENT" -lt "$MIN_EXPECTED" ]; then
+          echo "WARNING: Behind schedule - ${PROGRESS_PERCENT}% vs expected ${MIN_EXPECTED}%"
+          echo "ACTION: Consider scope reduction"
+        fi
+
+# Production implementor gates  
+prod_rust_implementor_hooks:
+  pre_commit:
+    - name: enforce_code_quality
+      description: Rust-specific quality gates
+      commands:
+        - "cargo fmt --check"
+        - "cargo clippy -- -D warnings"
+        - "cargo test"
+        - "cargo audit"
+      failure_action: block
+    
+    - name: check_unsafe_usage
+      description: Require documentation for unsafe blocks
+      validation_script: |
+        #!/bin/bash
+        # Find unsafe blocks without safety comments
+        if grep -n "unsafe" src/**/*.rs | grep -v "// Safety:" ; then
+          echo "ERROR: Unsafe block without safety documentation"
+          exit 1
+        fi
+
+  pre_release:
+    - name: verify_test_coverage
+      description: Ensure 80% minimum coverage
+      validation_script: |
+        #!/bin/bash
+        COVERAGE=$(cargo tarpaulin --print-summary | grep -oP '\d+\.\d+%' | sed 's/%//')
+        if (( $(echo "$COVERAGE < 80" | bc -l) )); then
+          echo "ERROR: Test coverage ${COVERAGE}% below 80% threshold"
+          exit 1
+        fi
+    
+    - name: benchmark_regression_check  
+      description: Detect performance regressions
+      commands:
+        - "cargo bench --save-baseline current"
+        - "cargo bench --baseline main --compare"
+
+# Inter-agent communication hooks
+coordination_hooks:
+  feature_handoff:
+    from: dual-track-architect
+    to: [kiosk-demo-executor, prod-rust-implementor]
+    required_artifacts:
+      - feature_specification.md
+      - acceptance_criteria.yaml
+      - track_assignment.json
+    
+  demo_to_production_migration:
+    from: kiosk-demo-executor
+    to: prod-rust-implementor
+    approval_required: dual-track-architect
+    required_artifacts:
+      - ui_mockups/
+      - user_flow.md
+      - shortcuts_taken.md
+      - demo_limitations.yaml
+
+# Approval workflows
+approval_chains:
+  emergency_cross_track_dependency:
+    approvers:
+      - dual-track-architect: required
+      - prod-rust-implementor: required
+      - kiosk-demo-executor: notify
+    timeout: 24h
+    auto_deny: true
+    
+  scope_expansion:
+    applies_to: kiosk-demo-executor
+    trigger: "timeline > 14 days"
+    approvers:
+      - dual-track-architect: required
+    timeout: 4h
+
+  breaking_api_change:
+    applies_to: prod-rust-implementor  
+    approvers:
+      - dual-track-architect: required
+      - downstream_consumers: notify
+    timeout: 48h
+
+# Monitoring and alerts
+monitoring:
+  metrics:
+    - name: track_isolation_violations
+      query: "count(cross_track_imports)"
+      threshold: 0
+      alert: immediate
+      
+    - name: demo_timeline_adherence
+      query: "avg(demo_feature_days)"
+      threshold: 14
+      alert: "value > threshold"
+      
+    - name: production_test_coverage
+      query: "min(test_coverage_percent)"
+      threshold: 80
+      alert: "value < threshold"
+
+  alerts:
+    channels:
+      - console: all
+      - file: .claude/alerts.log
+      - webhook: "${ALERT_WEBHOOK_URL}"  # Optional external integration
