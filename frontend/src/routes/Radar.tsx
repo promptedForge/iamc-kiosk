@@ -59,9 +59,9 @@ export default function Radar(){
   const canRequestSignoff = !signoffs[otherRole as 'Media Team' | 'Strategy Head']
 
   return (
-    <div className="px-10 py-20 min-h-screen bg-navy relative">
+    <div className="px-4 md:px-10 py-16 md:py-20 min-h-screen bg-navy relative">
       {/* User Role & Signoff Status */}
-      <div className="fixed top-4 right-4 card p-4 bg-opacity-90 backdrop-blur">
+      <div className="fixed top-16 md:top-4 right-4 card p-3 md:p-4 bg-opacity-90 backdrop-blur text-sm md:text-base">
         <div className="text-sm opacity-70 mb-1">Signed in as</div>
         <div className="text-lg font-bold mb-3">{userRole}</div>
         <div className="space-y-1 text-sm">
@@ -79,14 +79,14 @@ export default function Radar(){
       </div>
 
       {/* Real-time updates ticker */}
-      <div className="fixed bottom-4 left-4 right-4 card p-4 bg-opacity-90 backdrop-blur max-w-4xl mx-auto">
+      <div className="fixed bottom-20 md:bottom-4 left-4 right-4 card p-3 md:p-4 bg-opacity-90 backdrop-blur max-w-4xl mx-auto">
         <div className="text-xs opacity-70 mb-2 flex items-center gap-2">
           <span className="text-green-400 animate-pulse">●</span>
           Live Data Stream - Human Rights Intelligence
         </div>
         <div className="space-y-2">
           {realTimeUpdates.map((update, idx) => (
-            <div key={idx} className="text-sm animate-fade-in grid grid-cols-12 gap-2 items-start">
+            <div key={idx} className="text-xs md:text-sm animate-fade-in grid grid-cols-12 gap-2 items-start">
               <div className="col-span-7 flex items-start gap-2">
                 <span className="text-blue-400 mt-1">▸</span>
                 <span className="opacity-90">{update.text}</span>
@@ -103,7 +103,7 @@ export default function Radar(){
       </div>
 
       {/* Main Grid */}
-      <div className="grid grid-cols-2 gap-8 mb-20">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-20">
         {(['Policy','Industry','Advocacy','Risk'] as const).map(q => (
           <div key={q} className="card p-6">
             <div className="text-2xl font-bold mb-2">{q}</div>

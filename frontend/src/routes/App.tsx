@@ -2,6 +2,7 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import ReviewBar from '../components/ReviewBar'
 import Palette from '../components/Palette'
+import MobileController from '../components/MobileController'
 import { useStore } from '../store'
 
 export default function App(){
@@ -33,17 +34,18 @@ export default function App(){
     <div className="min-h-screen">
       <ReviewBar />
       <Palette />
+      <MobileController />
       <Outlet />
       {userRole && (
         <button 
           onClick={handleReset}
-          className="fixed bottom-4 left-4 btn opacity-70 hover:opacity-100 text-sm"
+          className="fixed bottom-4 left-4 btn opacity-70 hover:opacity-100 text-sm hidden md:block"
           title="Reset and change role"
         >
           Reset (R)
         </button>
       )}
-      <div className="kb">Keys: F (fullscreen) • Space (advance) • B (back) • R (reset) • ⌘K/Ctrl‑K (palette)</div>
+      <div className="kb hidden md:block">Keys: F (fullscreen) • Space (advance) • B (back) • R (reset) • ⌘K/Ctrl‑K (palette)</div>
     </div>
   )
 }

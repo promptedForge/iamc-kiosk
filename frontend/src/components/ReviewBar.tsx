@@ -39,20 +39,31 @@ export default function ReviewBar(){
 
   return (
     <div className="fixed top-0 left-0 right-0 p-2 bg-black/40 backdrop-blur z-40">
-      <div className="max-w-6xl mx-auto flex items-center justify-between text-sm">
-        <div className="flex items-center gap-4">
-          <span className="opacity-80">Human Review:</span>
-          <span className={`${paused?'text-yellow-300':'opacity-80'}`}>{paused? 'INTERRUPT ACTIVE' : 'idle'}</span>
-          <button className="btn" onClick={()=> paused ? resume() : interrupt()}>{paused?'Resume':'Interrupt'}</button>
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-2 text-sm">
+        <div className="flex items-center gap-2 md:gap-4">
+          <span className="opacity-80 hidden sm:inline">Human Review:</span>
+          <span className="opacity-80 sm:hidden">HR:</span>
+          <span className={`${paused?'text-yellow-300':'opacity-80'} text-xs sm:text-sm`}>{paused? 'ACTIVE' : 'idle'}</span>
+          <button className="btn text-xs sm:text-sm px-2 sm:px-3 py-1" onClick={()=> paused ? resume() : interrupt()}>
+            {paused?'Resume':'Interrupt'}
+          </button>
         </div>
-        <div className="flex items-center gap-4">
-          <span>Media Team: {mediaTeam}</span>
+        <div className="flex flex-wrap items-center gap-2 md:gap-4">
+          <div className="flex items-center gap-1">
+            <span className="text-xs sm:text-sm hidden sm:inline">Media Team:</span>
+            <span className="text-xs sm:text-sm sm:hidden">MT:</span>
+            <span>{mediaTeam}</span>
+          </div>
           {userRole === 'Media Team' && !signoffs['Media Team'] && (
-            <button className="btn" onClick={()=> sign('Media Team')}>Sign as Media Team</button>
+            <button className="btn text-xs px-2 py-1" onClick={()=> sign('Media Team')}>Sign</button>
           )}
-          <span>Strategy Head: {strat}</span>
+          <div className="flex items-center gap-1">
+            <span className="text-xs sm:text-sm hidden sm:inline">Strategy Head:</span>
+            <span className="text-xs sm:text-sm sm:hidden">SH:</span>
+            <span>{strat}</span>
+          </div>
           {userRole === 'Strategy Head' && !signoffs['Strategy Head'] && (
-            <button className="btn" onClick={()=> sign('Strategy Head')}>Sign as Strategy Head</button>
+            <button className="btn text-xs px-2 py-1" onClick={()=> sign('Strategy Head')}>Sign</button>
           )}
         </div>
       </div>
