@@ -143,6 +143,8 @@ export default function Issue(){
       }
       
       console.log('Generating comprehensive report...')
+      console.log('Brief data:', brief)
+      console.log('Report data being sent:', reportData)
       const report = await reportGenerator.generateReport(
         {
           ...reportData,

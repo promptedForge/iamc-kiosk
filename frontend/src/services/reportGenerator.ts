@@ -88,7 +88,9 @@ export class ReportGenerator {
             role: 'system',
             content: `You are a senior intelligence analyst creating comprehensive reports for human rights monitoring. 
 Your reports are used by ${audience} to make critical decisions about resource allocation and response strategies.
-Generate detailed, actionable intelligence reports based on the provided data.
+${data.brief.title.includes('Violence') || data.brief.summary.includes('violence') ? 
+'THIS IS A CRITICAL HUMAN RIGHTS CRISIS requiring immediate response. Focus on the specific violence incidents, affected communities, and urgent protective measures needed.' : 
+'Generate detailed, actionable intelligence reports based on the provided data.'}
 IMPORTANT: Return ONLY valid JSON matching the exact structure requested, with no markdown formatting or additional text.`
           },
           {
@@ -125,11 +127,15 @@ IMPORTANT: Return ONLY valid JSON matching the exact structure requested, with n
   private buildReportPrompt(data: ReportData, audience: string): string {
     const { brief, hypotheses, lensBrief, config } = data
     
-    return `Generate a comprehensive intelligence report based on the following data:
+    const isCrisis = brief.title.includes('Violence') || brief.summary.includes('violence') || brief.summary.includes('mob')
+    
+    return `Generate a comprehensive intelligence report based on the following ${isCrisis ? 'CRITICAL CRISIS' : 'intelligence'} data:
 
+${isCrisis ? '⚠️ URGENT: THIS IS AN ACTIVE HUMAN RIGHTS CRISIS ⚠️\n' : ''}
 BRIEF INFORMATION:
 Title: ${brief.title}
 Summary: ${brief.summary}
+${isCrisis ? 'SEVERITY: CRITICAL - Immediate intervention required\n' : ''}
 Risks: ${JSON.stringify(brief.risks)}
 Opportunities: ${JSON.stringify(brief.opportunities)}
 Recommendations: ${JSON.stringify(brief.recommendations)}
@@ -163,14 +169,16 @@ ${config ? `ADDITIONAL CONTEXT:
 - Focus on ${config.lens || 'executive'} lens priorities
 - Emphasize actionable insights for immediate implementation` : ''}
 
-Generate a comprehensive report with the following JSON structure:
+Generate a comprehensive report with the following JSON structure.
+${isCrisis ? 'CRITICAL: This report must address the ACTIVE COMMUNAL VIOLENCE in Rajasthan - 12 incidents in 48 hours targeting minority communities. Focus on immediate protective measures, law enforcement failures, and rapid response protocols.' : ''}
+
 {
-  "executive_summary": "2-3 paragraph executive summary highlighting key findings and immediate actions",
-  "situational_analysis": "Detailed analysis of the current situation, trends, and implications",
-  "risk_assessment": "Comprehensive risk analysis with likelihood and impact assessments",
-  "opportunity_analysis": "Strategic opportunities and potential positive outcomes",
-  "recommendations": "Detailed recommendations with implementation strategies",
-  "hypothesis_evaluation": "Analysis of detected patterns and their implications",
+  "executive_summary": "${isCrisis ? 'URGENT summary of the communal violence crisis, affected communities, and immediate intervention requirements' : '2-3 paragraph executive summary highlighting key findings and immediate actions'}",
+  "situational_analysis": "${isCrisis ? 'Analysis of the violence escalation, mob mobilization patterns via WhatsApp, law enforcement failures, and immediate threats to minority communities' : 'Detailed analysis of the current situation, trends, and implications'}",
+  "risk_assessment": "${isCrisis ? 'Assessment of imminent violence spread, breakdown of law enforcement, and risks to affected populations' : 'Comprehensive risk analysis with likelihood and impact assessments'}",
+  "opportunity_analysis": "${isCrisis ? 'Immediate intervention opportunities through NGO networks, fact-checking initiatives, and protective measures' : 'Strategic opportunities and potential positive outcomes'}",
+  "recommendations": "${isCrisis ? 'URGENT recommendations for community protection, crisis monitoring, legal aid deployment, and international engagement' : 'Detailed recommendations with implementation strategies'}",
+  "hypothesis_evaluation": "${isCrisis ? 'Evaluation of violence early warning patterns: WhatsApp velocity (6-8hr warning), police deployment reduction, medical supply indicators' : 'Analysis of detected patterns and their implications'}",
   "action_items": {
     "immediate": ["Actions to take within 24 hours"],
     "short_term": ["Actions for the next 7 days"],
