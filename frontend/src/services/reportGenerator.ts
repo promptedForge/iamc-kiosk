@@ -171,7 +171,7 @@ Generate a comprehensive report with the following JSON structure:
   },
   "communication_strategy": {
     "internal": "Internal communication approach and key messages",
-    "external": "External/public communication strategy",
+    "external": "External/public communication strategy for Facebook and social media",
     "media": "Media engagement approach and talking points"
   },
   "appendix": {

@@ -156,7 +156,7 @@ export default function Issue(){
       const actionItems = report.action_items.immediate
       
       setAssets({
-        linkedin: `${brief.title}\n\n${report.executive_summary.split('.')[0]}.\n\nKey insights:\n${brief.risks.slice(0, 2).map(r => `• ${r}`).join('\n')}\n\n${commsStrategy.external}\n\n#HumanRights #IntelligenceBrief #${brief.topic?.[0] || 'GlobalImpact'}`,
+        linkedin: `${brief.title}\n\n${report.executive_summary.split('.')[0]}.\n\nKey insights:\n${brief.risks.slice(0, 2).map(r => `• ${r}`).join('\n')}\n\n${commsStrategy.external}\n\n#HumanRights #${brief.topic?.[0] || 'GlobalImpact'} #CommunityAlert`,
         email_paragraph: `${commsStrategy.internal}\n\nImmediate actions:\n${actionItems.slice(0, 3).map(a => `• ${a}`).join('\n')}\n\n${report.recommendations.split('.')[0]}.`,
         press_excerpt: `${commsStrategy.media}\n\n${report.situational_analysis.split('.')[0]}.`
       })
@@ -164,7 +164,7 @@ export default function Issue(){
       console.error('Error generating report:', error)
       // Fallback to simple asset generation
       setAssets({
-        linkedin: `${brief.title}\n\nKey insights:\n• ${editableContent.risks?.[0] || brief.risks[0]}\n• ${editableContent.opportunities?.[0] || brief.opportunities[0]}\n\n#HumanRights #IntelligenceBrief`,
+        linkedin: `${brief.title}\n\nKey insights:\n• ${editableContent.risks?.[0] || brief.risks[0]}\n• ${editableContent.opportunities?.[0] || brief.opportunities[0]}\n\n#HumanRights #CommunityUpdate`,
         email_paragraph: `Team,\n\nRegarding ${brief.title}: ${editableContent.summary || brief.summary}\n\nRecommended actions: ${editableContent[`actions_${lens}`]?.[0] || lensBrief?.actions[0] || 'Monitor situation'}`,
         press_excerpt: `${brief.title}. ${editableContent.summary || brief.summary}`
       })
@@ -246,7 +246,7 @@ export default function Issue(){
   }
 
   return (
-    <div className={`min-h-screen ${responsivePadding.page} ${isMobile ? 'pt-28' : 'pt-24'} bg-[radial-gradient(1000px_600px_at_10%_10%,#12345633,transparent)]`}>
+    <div className={`min-h-screen ${responsivePadding.page} ${isMobile ? 'pt-32' : 'pt-28'} pb-8 bg-[radial-gradient(1000px_600px_at_10%_10%,#12345633,transparent)]`}>
       <div className={`${isMobile ? 'max-w-full' : 'max-w-5xl'} mx-auto ${responsiveGap.medium} flex flex-col`}>
         <div className={`flex ${isMobile ? 'flex-col gap-4' : 'items-start justify-between'} mb-4`}>
           <div className="flex-1">
@@ -482,7 +482,7 @@ export default function Issue(){
           {!!assets && (
             <div className={`grid ${isMobile ? 'grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'} gap-4 text-sm`}>
               <div>
-                <div className="font-semibold mb-1">LinkedIn</div>
+                <div className="font-semibold mb-1">Facebook</div>
                 <textarea 
                   className="w-full bg-[#11253c] rounded p-2 text-xs min-h-[120px] resize-y"
                   value={assets.linkedin}
@@ -718,7 +718,7 @@ function EditableCard({ title, items, onUpdate }: { title: string, items: string
   }
 
   return (
-    <div className="bg-[#11253c]/50 rounded-xl p-5 backdrop-blur-sm">
+    <div className="bg-[#11253c]/50 rounded-xl p-6 backdrop-blur-sm border border-cyan-900/20">
       <div className="font-semibold mb-3 flex justify-between items-center">
         <span className="text-cyan-100">{title}</span>
         <button onClick={addItem} className="text-xs opacity-60 hover:opacity-100 hover:text-cyan-300 transition-colors">+ Add</button>
