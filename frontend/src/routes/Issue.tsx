@@ -491,7 +491,7 @@ export default function Issue(){
           {!!assets && (
             <div className={`grid ${isMobile ? 'grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'} gap-4 text-sm`}>
               <div>
-                <div className="font-semibold mb-1">Facebook</div>
+                <div className="font-semibold mb-1">Social Media</div>
                 <textarea 
                   className="w-full bg-[#11253c] rounded p-2 text-xs min-h-[120px] resize-y"
                   value={assets.linkedin}
