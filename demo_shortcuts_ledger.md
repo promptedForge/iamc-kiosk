@@ -54,8 +54,8 @@ This document tracks shortcuts taken in the demo/kiosk track that need to be add
 2. **High**: Hypothesis state management (needed for learning loop)
 3. **Medium**: Dynamic role loading from contracts
 4. **Medium**: Lens-specific content generation
-5. **Medium**: Dynamic hypothesis counts in radar
-6. **Low**: Evidence link integration
+5. **Low**: Evidence link integration
+6. **Low**: Data Scientist backend features
 7. **Low**: Data Scientist backend features
 
 ## Notes
