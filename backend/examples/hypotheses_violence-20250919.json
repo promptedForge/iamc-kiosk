@@ -2,7 +2,7 @@
   {
     "id": "H-VIO-001",
     "event_id": "violence-20250919",
-    "text": "WhatsApp message velocity in local language groups shows 400% spike 6-8 hours before violence events, with specific keyword patterns ('revenge', 'teach lesson', 'gathering at') providing early warning.",
+    "text": "WhatsApp message velocity in local language groups shows 400% spike 6-8 hours before violence events, with specific keyword patterns and location sharing providing predictive signals for mob formation.",
     "confidence": 0.89,
     "lead_days": 0.3,
     "factors": {
