@@ -6,6 +6,11 @@ use std::{env, fs, path::Path};
 use chrono::{DateTime, Utc};
 use walkdir::WalkDir;
 
+pub mod hypothesis;
+pub mod roles;
+pub mod export;
+pub mod config;
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Config {
     pub examples_dir: String,
