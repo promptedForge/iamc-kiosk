@@ -92,12 +92,7 @@ export default function App(){
         // In kiosk mode, Escape goes back instead of exiting fullscreen
         nav(-1)
       }
-      // Number keys for quick navigation
-      if(e.key >= '1' && e.key <= '9' && !e.ctrlKey && !e.metaKey){
-        const routes = ['/', '/radar', '/issue', '/export', '/tweaks', '/config', '/roi']
-        const index = parseInt(e.key) - 1
-        if(routes[index]) nav(routes[index])
-      }
+      // Remove number key navigation - handled by arrow keys in NavigationController
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -170,15 +165,41 @@ export default function App(){
         </button>
       </div>
       
-      {/* Keyboard shortcuts help */}
+      {/* Demo Control Hotkeys panel - positioned left of thumb controller */}
       {isKioskMode && (
-        <div className="fixed bottom-4 right-4 bg-black/80 p-3 rounded-lg text-xs opacity-40 hover:opacity-80 transition-opacity z-20">
-          <div className="font-semibold mb-1">Shortcuts:</div>
-          <div className="space-y-0.5">
-            <div>1-9: Quick navigation</div>
-            <div>R: Reset session</div>
-            <div>F: Exit kiosk mode</div>
-            <div>ESC: Go back</div>
+        <div className="fixed bottom-6 right-[calc(5rem+3.5rem+1.5rem)] bg-black/80 backdrop-blur-sm p-3 rounded-lg text-xs opacity-40 hover:opacity-80 transition-opacity z-20 border border-cyan-900/30">
+          <div className="font-semibold mb-1 text-cyan-300">Demo Control Hotkeys:</div>
+          <div className="space-y-0.5 text-gray-300">
+            <div className="flex items-center gap-2">
+              <kbd className="px-1.5 py-0.5 bg-[#162b44] rounded text-[10px]">←</kbd>
+              <span>Go back</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <kbd className="px-1.5 py-0.5 bg-[#162b44] rounded text-[10px]">→</kbd>
+              <span>Next screen</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <kbd className="px-1.5 py-0.5 bg-[#162b44] rounded text-[10px]">↑</kbd>
+              <span>Tweaks</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <kbd className="px-1.5 py-0.5 bg-[#162b44] rounded text-[10px]">↓</kbd>
+              <span>Export</span>
+            </div>
+            <div className="border-t border-cyan-900/30 mt-2 pt-2">
+              <div className="flex items-center gap-2">
+                <kbd className="px-1.5 py-0.5 bg-[#162b44] rounded text-[10px]">R</kbd>
+                <span>Reset session</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <kbd className="px-1.5 py-0.5 bg-[#162b44] rounded text-[10px]">F</kbd>
+                <span>Exit kiosk</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <kbd className="px-1.5 py-0.5 bg-[#162b44] rounded text-[10px]">ESC</kbd>
+                <span>Go back</span>
+              </div>
+            </div>
           </div>
         </div>
       )}
