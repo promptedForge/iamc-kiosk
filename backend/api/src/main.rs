@@ -68,6 +68,98 @@ async fn classify_today(State(st): State<AppState>, Query(_): Query<MockQuery>) 
     engine::classify_today(&st.cfg).await.map(Json).map_err(err500)
 }
 async fn brief(State(st): State<AppState>, Path(id): Path<String>, Query(q): Query<LensQuery>) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
+    // Mock data for demo
+    if st.cfg.mock {
+        if let Some(lens) = q.lens {
+            // Mock lens brief
+            let mock_lens_brief = serde_json::json!({
+                "actions": match lens.as_str() {
+                    "ceo" => vec![
+                        "Schedule executive briefing within 2 hours",
+                        "Prepare media statement for board approval",
+                        "Initiate stakeholder communications protocol"
+                    ],
+                    "coo" => vec![
+                        "Review operational impact assessment",
+                        "Coordinate cross-functional response team",
+                        "Update internal crisis management procedures"
+                    ],
+                    "director" => vec![
+                        "Brief department heads immediately",
+                        "Compile regulatory compliance checklist",
+                        "Monitor industry peer responses"
+                    ],
+                    _ => vec!["Monitor situation", "Prepare response", "Update stakeholders"]
+                },
+                "talking_points": match lens.as_str() {
+                    "ceo" => vec![
+                        "We are monitoring the situation closely and taking proactive measures",
+                        "Our commitment to human rights remains unwavering",
+                        "We will work with all stakeholders to ensure positive outcomes"
+                    ],
+                    "coo" => vec![
+                        "Operations team is fully briefed and prepared",
+                        "All protocols are being followed to ensure compliance",
+                        "We have contingency plans in place for various scenarios"
+                    ],
+                    "director" => vec![
+                        "Teams are aware and monitoring developments",
+                        "We are coordinating with relevant departments",
+                        "Regular updates will be provided as situation evolves"
+                    ],
+                    _ => vec!["Situation under review", "Updates forthcoming", "Coordinating response"]
+                }
+            });
+            return Ok(Json(mock_lens_brief));
+        } else {
+            // Mock regular brief based on the ID
+            let mock_brief = match id.as_str() {
+                "farmers-20250919" => serde_json::json!({
+                    "id": "farmers-20250919",
+                    "title": "Farmer Protests Gain Momentum in Maharashtra",
+                    "summary": "Large-scale farmer protests in Maharashtra demanding MSP guarantees show signs of spreading to neighboring states. Government response pending.",
+                    "risks": vec![
+                        "Supply chain disruptions if protests expand",
+                        "Negative media coverage of corporate agriculture partnerships",
+                        "Political pressure for immediate policy changes"
+                    ],
+                    "opportunities": vec![
+                        "Engage directly with farmer organizations",
+                        "Showcase sustainable agriculture initiatives",
+                        "Partner with government on MSP solution framework"
+                    ],
+                    "recommendations": vec![
+                        "Issue neutral statement supporting dialogue",
+                        "Review agricultural supply chain dependencies",
+                        "Prepare CSR initiative for affected regions"
+                    ]
+                }),
+                _ => serde_json::json!({
+                    "id": id,
+                    "title": "Human Rights Pattern Analysis",
+                    "summary": "Comprehensive analysis of recent human rights developments and their potential impact on operations and reputation.",
+                    "risks": vec![
+                        "Potential reputational impact from association",
+                        "Regulatory scrutiny may increase",
+                        "Stakeholder concerns about corporate response"
+                    ],
+                    "opportunities": vec![
+                        "Demonstrate leadership in human rights",
+                        "Strengthen stakeholder relationships",
+                        "Enhance ESG credentials"
+                    ],
+                    "recommendations": vec![
+                        "Monitor situation closely",
+                        "Prepare comprehensive response plan",
+                        "Engage with relevant stakeholders"
+                    ]
+                })
+            };
+            return Ok(Json(mock_brief));
+        }
+    }
+    
+    // Original logic for non-mock mode
     if let Some(lens) = q.lens {
         let lb: LensBrief = engine::lens_brief(&st.cfg, &id, &lens).await.map_err(err500)?;
         Ok(Json(serde_json::to_value(lb).unwrap()))
