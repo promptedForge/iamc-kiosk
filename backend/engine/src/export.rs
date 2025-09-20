@@ -8,7 +8,7 @@ use chrono::{DateTime, Utc};
 use crate::{Brief, LensBrief, Assets, Config};
 
 /// Export format enum
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq, Hash)]
 #[serde(rename_all = "lowercase")]
 pub enum ExportFormat {
     Zip,
@@ -341,7 +341,7 @@ fn generate_pdf_html(brief: &Brief, assets: &Assets, metadata: &ExportMetadata) 
             e.url,
             e.url
         )).collect::<Vec<_>>().join("\n        "),
-        assets.linkedin_post.as_deref().unwrap_or("N/A"),
-        assets.email_paragraph.as_deref().unwrap_or("N/A"),
+        &assets.linkedin,
+        &assets.email_paragraph,
     ))
 }
