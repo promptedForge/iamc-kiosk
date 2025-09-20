@@ -1,0 +1,13 @@
+{
+  "type": "object",
+  "required": ["time_of_day", "audiences", "require_dual_signoff", "autopublish"],
+  "properties": {
+    "time_of_day": {"type": "string", "pattern": "^\\d{2}:\\d{2}$"},
+    "audiences": {
+      "type": "array",
+      "items": {"type": "string", "enum": ["CEO", "COO", "Director", "Board", "Members"]}
+    },
+    "require_dual_signoff": {"type": "boolean"},
+    "autopublish": {"type": "boolean"}
+  }
+}

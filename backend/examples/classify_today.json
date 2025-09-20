@@ -1,182 +1,106 @@
 [
   {
     "id": "farmers-20250919",
-    "title": "Pattern: Coordinated farmer protests across 6 states show unified demands",
+    "title": "Pattern: Coordinated farmer protests across Maharashtra & Punjab escalate demands on MSP",
     "quadrant": "Advocacy",
     "score": 0.92,
     "visibility": ["Media Team", "Strategy Head"],
     "priority": "high",
-    "trend": "Escalating coordination between farmer unions"
-  },
-  {
-    "id": "labor-20250919",
-    "title": "Trend: 47% increase in wage-related strikes in textile sector",
-    "quadrant": "Risk",
-    "score": 0.81,
-    "visibility": ["Media Team", "Strategy Head"],
-    "priority": "high",
-    "trend": "Rising labor unrest in manufacturing hubs"
-  },
-  {
-    "id": "tribal-20250919",
-    "title": "Pattern: Supreme Court consolidating 12 tribal land cases",
-    "quadrant": "Policy",
-    "score": 0.76,
-    "visibility": ["Strategy Head"],
-    "priority": "high",
-    "trend": "Judicial activism on indigenous rights"
-  },
-  {
-    "id": "industry-supply-20250919",
-    "title": "Alert: Supply chain disruptions affecting 3 major industrial corridors",
-    "quadrant": "Industry",
-    "score": 0.88,
-    "visibility": ["Media Team", "Strategy Head"],
-    "priority": "high",
-    "trend": "Infrastructure bottlenecks increasing"
-  },
-  {
-    "id": "industry-compliance-20250919",
-    "title": "Pattern: Foreign buyers increasing social compliance audits by 300%",
-    "quadrant": "Industry",
-    "score": 0.84,
-    "visibility": ["Strategy Head"],
-    "priority": "high",
-    "trend": "ESG pressure from international markets"
-  },
-  {
-    "id": "industry-tech-20250919",
-    "title": "Trend: Tech companies facing new data localization requirements",
-    "quadrant": "Industry",
-    "score": 0.79,
-    "visibility": ["Media Team", "Strategy Head"],
-    "priority": "medium",
-    "trend": "Regulatory tightening in digital sector"
-  },
-  {
-    "id": "child-20250919",
-    "title": "Critical: Child labor network exposed across 4 states",
-    "quadrant": "Risk",
-    "score": 0.89,
-    "visibility": ["Media Team"],
-    "priority": "critical",
-    "trend": "Underground labor trafficking increasing"
+    "trend": "Marches expand to district HQs; rail block calls circulating",
+    "geo": ["IN-MH", "IN-PB"],
+    "topic": ["MSP", "agriculture", "protest"],
+    "kind": "issue",
+    "provenance_hint": ["The Hindu", "Indian Express", "Scroll.in"]
   },
   {
     "id": "press-20250919",
-    "title": "Alert: 23 journalists detained in past 48 hours",
+    "title": "Alert: 23 journalists detained in 48 hours during coverage of protests",
     "quadrant": "Risk",
-    "score": 0.85,
+    "score": 0.88,
     "visibility": ["Media Team", "Strategy Head"],
     "priority": "critical",
-    "trend": "Press freedom deteriorating rapidly"
+    "trend": "Detentions clustered around protest corridors",
+    "geo": ["IN-UP", "IN-HR", "IN-DEL"],
+    "topic": ["press_freedom", "civil_liberties"],
+    "kind": "issue",
+    "provenance_hint": ["Committee to Protect Journalists", "HRW", "Bar & Bench"]
   },
   {
     "id": "policy-labor-20250919",
-    "title": "Development: New labor code implementation delayed again",
+    "title": "Development: Labour Code implementation delayed again; compliance ambiguity persists",
     "quadrant": "Policy",
     "score": 0.82,
     "visibility": ["Media Team", "Strategy Head"],
     "priority": "high",
-    "trend": "Policy paralysis on worker protections"
+    "trend": "State notifications uneven; MSME confusion rises",
+    "geo": ["IN"],
+    "topic": ["labour_code", "compliance"],
+    "kind": "issue",
+    "provenance_hint": ["PRS India", "PIB", "Mint"]
   },
   {
-    "id": "dalit-20250919",
-    "title": "Pattern: Dalit activism shifting to legal channels",
-    "quadrant": "Advocacy",
-    "score": 0.73,
-    "visibility": ["Media Team"],
+    "id": "rail-corridor-20250919",
+    "title": "Alert: Rail freight disruptions on Eastern Dedicated Freight Corridor affecting grains & coal",
+    "quadrant": "Industry",
+    "score": 0.86,
+    "visibility": ["Strategy Head", "Media Team"],
+    "priority": "high",
+    "trend": "Rake availability dips; siding congestion reported",
+    "geo": ["IN-BR", "IN-JH", "IN-WB"],
+    "topic": ["logistics", "energy", "agriculture"],
+    "kind": "feed_example",
+    "provenance_hint": ["Rail Drishti", "DFCCIL updates", "CMIE logistics"]
+  },
+  {
+    "id": "internet-20250919",
+    "title": "Pattern: Targeted internet shutdowns coincide with protest days",
+    "quadrant": "Risk",
+    "score": 0.84,
+    "visibility": ["Strategy Head"],
+    "priority": "high",
+    "trend": "Shutdown windows align with announced marches",
+    "geo": ["IN-MH", "IN-HR"],
+    "topic": ["internet_shutdowns", "assembly"],
+    "kind": "feed_example",
+    "provenance_hint": ["SFLC.in tracker", "Software Freedom Law Center India"]
+  },
+  {
+    "id": "wheat-exports-20250919",
+    "title": "Analysis: Wheat export curbs extend; mandi prices diverge from MSP in 3 states",
+    "quadrant": "Policy",
+    "score": 0.79,
+    "visibility": ["Media Team", "Strategy Head"],
     "priority": "medium",
-    "trend": "Strategic litigation increasing"
+    "trend": "Price divergence > 2 SD from baseline",
+    "geo": ["IN-MP", "IN-UP", "IN-RJ"],
+    "topic": ["wheat", "exports", "mandi_prices"],
+    "kind": "feed_example",
+    "provenance_hint": ["Agmarknet", "FAOSTAT", "DGCIS"]
   },
   {
     "id": "women-20250919",
-    "title": "Trend: Women's collectives forming across industrial zones",
+    "title": "Trend: Women's collectives coordinate factory-gate briefings across 8 industrial zones",
     "quadrant": "Advocacy",
     "score": 0.88,
     "visibility": ["Media Team", "Strategy Head"],
     "priority": "high",
-    "trend": "Gender-based organizing strengthening"
+    "trend": "Shift-change leafleting increases participation",
+    "geo": ["IN-TN", "IN-KA", "IN-MH"],
+    "topic": ["women_workers", "organizing"],
+    "kind": "issue",
+    "provenance_hint": ["People's Archive of Rural India", "The News Minute"]
   },
   {
-    "id": "industry-auto-20250919",
-    "title": "Alert: Auto sector facing worker shortage after mass resignations",
-    "quadrant": "Industry",
-    "score": 0.86,
-    "visibility": ["Strategy Head"],
-    "priority": "high",
-    "trend": "Skilled labor migration accelerating"
-  },
-  {
-    "id": "environ-20250919",
-    "title": "Pattern: Environmental protests targeting mining operations",
-    "quadrant": "Risk",
-    "score": 0.74,
-    "visibility": ["Strategy Head"],
-    "priority": "medium",
-    "trend": "Green activism intensifying"
-  },
-  {
-    "id": "migrant-20250919",
-    "title": "Analysis: Interstate migrant movement patterns changing",
-    "quadrant": "Policy",
-    "score": 0.83,
-    "visibility": ["Media Team", "Strategy Head"],
-    "priority": "high",
-    "trend": "Migration routes shifting due to conflicts"
-  },
-  {
-    "id": "minority-20250919",
-    "title": "Development: Coalition forming for minority protection bill",
-    "quadrant": "Policy",
-    "score": 0.77,
-    "visibility": ["Strategy Head"],
-    "priority": "high",
-    "trend": "Cross-party support emerging"
-  },
-  {
-    "id": "industry-pharma-20250919",
-    "title": "Trend: Pharma companies relocating due to regulatory pressure",
-    "quadrant": "Industry",
-    "score": 0.81,
-    "visibility": ["Media Team", "Strategy Head"],
-    "priority": "medium",
-    "trend": "Industry consolidation accelerating"
-  },
-  {
-    "id": "advocacy-youth-20250919",
-    "title": "Pattern: Youth-led movements gaining momentum in 8 cities",
+    "id": "dalit-legal-20250919",
+    "title": "Pattern: Dalit rights petitions consolidate at High Courts; PIL strategy intensifies",
     "quadrant": "Advocacy",
-    "score": 0.79,
+    "score": 0.73,
     "visibility": ["Media Team"],
     "priority": "medium",
-    "trend": "Digital organizing tactics evolving"
-  },
-  {
-    "id": "risk-cyber-20250919",
-    "title": "Alert: Coordinated cyber attacks on activist networks",
-    "quadrant": "Risk",
-    "score": 0.91,
-    "visibility": ["Media Team", "Strategy Head"],
-    "priority": "critical",
-    "trend": "Digital surveillance expanding"
-  },
-  {
-    "id": "policy-education-20250919",
-    "title": "Analysis: Education policy changes affecting minority institutions",
-    "quadrant": "Policy",
-    "score": 0.72,
-    "visibility": ["Strategy Head"],
-    "priority": "medium",
-    "trend": "Centralization of education control"
-  },
-  {
-    "id": "industry-retail-20250919",
-    "title": "Pattern: Retail chains facing boycotts over labor practices",
-    "quadrant": "Industry",
-    "score": 0.75,
-    "visibility": ["Media Team", "Strategy Head"],
-    "priority": "medium",
-    "trend": "Consumer activism rising"
+    "trend": "Legal aid orgs coordinate filings",
+    "geo": ["IN-TN", "IN-MH", "IN-UP"],
+    "topic": ["dalit_rights", "legal"],
+    "kind": "issue",
+    "provenance_hint": ["LiveLaw", "Bar & Bench"]
   }
 ]

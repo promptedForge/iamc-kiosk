@@ -21,7 +21,7 @@ export default function Framing(){
     }
   }, [userRole, nav])
 
-  const handleRoleSelect = (role: 'Media Team' | 'Strategy Head') => {
+  const handleRoleSelect = (role: 'Media Team' | 'Strategy Head' | 'Data Scientist') => {
     setUserRole(role)
   }
 
@@ -34,7 +34,7 @@ export default function Framing(){
         {showLogin && !userRole && (
           <div className="mt-12 space-y-4 animate-fade-in">
             <div className="text-xl font-semibold mb-6">Sign in as:</div>
-            <div className="flex gap-4 justify-center">
+            <div className="flex gap-4 justify-center flex-wrap">
               <button 
                 onClick={() => handleRoleSelect('Media Team')}
                 className="px-8 py-4 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold text-lg transition-all transform hover:scale-105"
@@ -46,6 +46,14 @@ export default function Framing(){
                 className="px-8 py-4 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold text-lg transition-all transform hover:scale-105"
               >
                 Strategy Head
+              </button>
+            </div>
+            <div className="mt-4">
+              <button 
+                onClick={() => handleRoleSelect('Data Scientist')}
+                className="px-6 py-3 bg-gray-600 hover:bg-gray-700 rounded-lg font-medium text-base transition-all transform hover:scale-105 opacity-75"
+              >
+                Data Scientist (Read-only)
               </button>
             </div>
           </div>

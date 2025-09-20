@@ -1,32 +1,34 @@
 {
   "id": "labor-20250919",
-  "title": "Labor Coalition Actions: Operational Readiness",
-  "summary": "Coordinated actions may impact facility throughput and media narratives; early member advisory recommended.",
+  "title": "Labour Code Delays: Field-Level Readiness & Worker Protections",
+  "summary": "Staggered notifications and uneven readiness among states sustain ambiguity for employers and workers; IAMC can inform members on practical compliance steps and rights safeguards.",
   "risks": [
-    "Service disruptions at critical sites",
-    "Narrative drift toward politicization",
-    "Confusion over IAMC stance among members"
+    "Service disruptions from misinterpretation of compliance windows",
+    "Narrative drift framing IAMC as partisan rather than rights-focused",
+    "Confusion among migrant workers on entitlements"
   ],
   "opportunities": [
-    "Proactive advisory positions IAMC as steady partner",
-    "Clarify neutral stance while emphasizing safety",
-    "Offer hotline for member incident reporting"
+    "Issue plain-language guidance for chapters",
+    "Document state-wise notification map",
+    "Partner with legal aid clinics for hotline pilots"
   ],
   "recommendations": [
-    "Issue advisory memo within 2 hours",
-    "Prepare Q&A for member services",
-    "Coordinate with local partners for incident visibility"
+    "Publish state notification map within 72 hours",
+    "Create Q&A for member services",
+    "Host legal-aid webinar within one week"
   ],
   "evidence": [
     {
-      "source": "Union Press Brief",
-      "url": "https://example.com/union/brief",
-      "confidence": 0.78
+      "source": "PRS India – Labour Codes tracker",
+      "url": "https://prsindia.org/",
+      "confidence": 0.82
     },
     {
-      "source": "Local Media",
-      "url": "https://local.example.com/labor",
-      "confidence": 0.63
+      "source": "LiveLaw – Notifications coverage",
+      "url": "https://www.livelaw.in/",
+      "confidence": 0.68
     }
-  ]
+  ],
+  "geo": ["IN"],
+  "topic": ["labour_code", "workers_rights"]
 }

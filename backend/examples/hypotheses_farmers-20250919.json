@@ -1,0 +1,41 @@
+[
+  {
+    "id": "H-FARM-001",
+    "event_id": "farmers-20250919",
+    "text": "Pre-protest spikes in mandi price divergence and rail-freight slowdowns in IN-MH/IN-PB preceded March calls by ~18–24 days.",
+    "confidence": 0.78,
+    "factors": {
+      "source_diversity": 0.22,
+      "persistence": 0.18,
+      "effect_size": 0.22,
+      "corroboration": 0.16
+    },
+    "lead_days": 21,
+    "scope_contrib": {"Trade": 0.34, "Commerce": 0.27, "Logistics": 0.19, "Media": 0.11},
+    "utility": {"predictive": "high", "mapping": "medium"},
+    "provenance": [
+      {"source": "Agmarknet mandi prices", "url": "https://agmarknet.gov.in/", "confidence": 0.85},
+      {"source": "Rail Drishti rake metrics", "url": "https://raildrishti.indianrailways.gov.in/", "confidence": 0.7},
+      {"source": "DFCCIL updates", "url": "https://dfccil.com/", "confidence": 0.6}
+    ]
+  },
+  {
+    "id": "H-FARM-002",
+    "event_id": "farmers-20250919",
+    "text": "District night-lights and fuel sales anomalies cluster along protest corridors one week pre-event.",
+    "confidence": 0.61,
+    "factors": {
+      "source_diversity": 0.19,
+      "persistence": 0.12,
+      "effect_size": 0.17,
+      "corroboration": 0.13
+    },
+    "lead_days": 7,
+    "scope_contrib": {"Energy": 0.22, "Environment": 0.2, "Logistics": 0.17},
+    "utility": {"predictive": "medium", "mapping": "high"},
+    "provenance": [
+      {"source": "NOAA VIIRS night-lights", "url": "https://www.ngdc.noaa.gov/eog/viirs.html", "confidence": 0.65},
+      {"source": "Petroleum sales summaries", "url": "https://ppac.gov.in/", "confidence": 0.6}
+    ]
+  }
+]
