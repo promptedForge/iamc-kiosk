@@ -170,15 +170,15 @@ ${config ? `ADDITIONAL CONTEXT:
 - Emphasize actionable insights for immediate implementation` : ''}
 
 Generate a comprehensive report with the following JSON structure.
-${isCrisis ? 'CRITICAL: This report must address the ACTIVE COMMUNAL VIOLENCE in Rajasthan - 12 incidents in 48 hours targeting minority communities. Focus on immediate protective measures, law enforcement failures, and rapid response protocols.' : ''}
+${isCrisis ? 'CRITICAL: This report must address the ACTIVE LYNCHING CRISIS in Rajasthan - 12 lynch mob attacks on Muslims in 48 hours with 7 fatalities. Focus on preventing further killings, documenting police failures to protect Muslim communities, and immediate intervention protocols.' : ''}
 
 {
-  "executive_summary": "${isCrisis ? 'URGENT summary of the communal violence crisis, affected communities, and immediate intervention requirements' : '2-3 paragraph executive summary highlighting key findings and immediate actions'}",
-  "situational_analysis": "${isCrisis ? 'Analysis of the violence escalation, mob mobilization patterns via WhatsApp, law enforcement failures, and immediate threats to minority communities' : 'Detailed analysis of the current situation, trends, and implications'}",
-  "risk_assessment": "${isCrisis ? 'Assessment of imminent violence spread, breakdown of law enforcement, and risks to affected populations' : 'Comprehensive risk analysis with likelihood and impact assessments'}",
-  "opportunity_analysis": "${isCrisis ? 'Immediate intervention opportunities through NGO networks, fact-checking initiatives, and protective measures' : 'Strategic opportunities and potential positive outcomes'}",
-  "recommendations": "${isCrisis ? 'URGENT recommendations for community protection, crisis monitoring, legal aid deployment, and international engagement' : 'Detailed recommendations with implementation strategies'}",
-  "hypothesis_evaluation": "${isCrisis ? 'Evaluation of violence early warning patterns: WhatsApp velocity (6-8hr warning), police deployment reduction, medical supply indicators' : 'Analysis of detected patterns and their implications'}",
+  "executive_summary": "${isCrisis ? 'URGENT summary of the lynching crisis targeting Muslims in Rajasthan, 7 people killed in 12 attacks, and immediate intervention requirements to prevent further murders' : '2-3 paragraph executive summary highlighting key findings and immediate actions'}",
+  "situational_analysis": "${isCrisis ? 'Analysis of the lynching attacks, WhatsApp-coordinated mob formation with hate speech, systematic police withdrawal from Muslim areas, and ongoing threats to Muslim families' : 'Detailed analysis of the current situation, trends, and implications'}",
+  "risk_assessment": "${isCrisis ? 'Assessment of imminent lynching risk spreading to neighboring districts, continued police inaction, and immediate danger to Muslim communities' : 'Comprehensive risk analysis with likelihood and impact assessments'}",
+  "opportunity_analysis": "${isCrisis ? 'Immediate intervention opportunities: activating NGO protection networks, deploying fact-checkers against hate speech, documenting evidence for accountability' : 'Strategic opportunities and potential positive outcomes'}",
+  "recommendations": "${isCrisis ? 'URGENT recommendations to prevent further lynchings: deploy protection teams, document police failures, provide legal aid to victims families, alert international human rights bodies' : 'Detailed recommendations with implementation strategies'}",
+  "hypothesis_evaluation": "${isCrisis ? 'Evaluation of lynching early warning patterns: WhatsApp hate speech velocity (6-8hr warning), police withdrawal patterns (24-48hr), trauma kit orders indicating planned attacks' : 'Analysis of detected patterns and their implications'}",
   "action_items": {
     "immediate": ["Actions to take within 24 hours"],
     "short_term": ["Actions for the next 7 days"],

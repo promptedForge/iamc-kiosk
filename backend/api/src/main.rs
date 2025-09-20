@@ -192,13 +192,13 @@ async fn brief(State(st): State<AppState>, Path(id): Path<String>, Query(q): Que
                 }),
                 "violence-20250919" => serde_json::json!({
                     "id": "violence-20250919",
-                    "title": "Communal Violence Escalation in Western Rajasthan",
-                    "summary": "Coordinated mob violence targeting minority communities across 3 districts. WhatsApp-driven mobilization patterns detected. Local law enforcement capacity overwhelmed. Human rights organizations report 12 incidents in 48 hours. Immediate protective measures and documentation required.",
+                    "title": "Lynching Crisis: Multiple Incidents Targeting Muslims in Rajasthan",
+                    "summary": "Coordinated lynch mob attacks targeting Muslim communities across 3 districts in western Rajasthan. WhatsApp-driven mobilization with hate speech preceding physical violence. Local law enforcement failing to prevent attacks. 12 lynching incidents documented in 48 hours with 7 fatalities. Immediate intervention required to prevent further killings.",
                     "risks": vec![
-                        "Imminent risk of violence spreading to neighboring districts",
-                        "Social media-driven mob formation patterns detected",
-                        "Breakdown of local law enforcement protocols",
-                        "International human rights scrutiny intensifying"
+                        "Imminent risk of lynching attacks spreading to neighboring districts",
+                        "WhatsApp-coordinated lynch mobs targeting Muslim families",
+                        "Police failure to protect Muslim communities from mob violence",
+                        "International human rights organizations documenting systematic killings"
                     ],
                     "opportunities": vec![
                         "Activate rapid response network with local NGOs",

@@ -2,7 +2,7 @@
   {
     "id": "H-VIO-001",
     "event_id": "violence-20250919",
-    "text": "WhatsApp message velocity in local language groups shows 400% spike 6-8 hours before violence events, with specific keyword patterns and location sharing providing predictive signals for mob formation.",
+    "text": "WhatsApp message velocity in local language groups shows 400% spike 6-8 hours before lynching attacks, with hate speech keywords ('revenge', 'teach them', 'gathering at') and location pins providing clear mob formation signals.",
     "confidence": 0.89,
     "lead_days": 0.3,
     "factors": {
@@ -36,7 +36,7 @@
   {
     "id": "H-VIO-002",
     "event_id": "violence-20250919",
-    "text": "Police deployment patterns show 60% reduction in minority area patrols 24-48 hours before incidents, suggesting either complicity or intelligence failure.",
+    "text": "Police deployment patterns show 60% reduction in Muslim-majority area patrols 24-48 hours before lynching incidents, indicating systematic withdrawal of protection before attacks.",
     "confidence": 0.76,
     "lead_days": 1.5,
     "factors": {
@@ -70,7 +70,7 @@
   {
     "id": "H-VIO-003",
     "event_id": "violence-20250919",
-    "text": "Local hospital emergency supply orders for trauma kits increase 200% in specific districts 3-5 days before violence, indicating local awareness of impending incidents.",
+    "text": "Local hospital emergency supply orders for trauma kits increase 200% in specific districts 3-5 days before lynching attacks, indicating healthcare system awareness of planned violence against Muslims.",
     "confidence": 0.68,
     "lead_days": 4,
     "factors": {
