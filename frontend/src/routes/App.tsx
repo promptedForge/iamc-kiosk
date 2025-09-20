@@ -2,12 +2,12 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import ReviewBar from '../components/ReviewBar'
 import Palette from '../components/Palette'
-import MobileController from '../components/MobileController'
+import NavigationController from '../components/NavigationController'
 import { useStore } from '../store'
 
 export default function App(){
   const nav = useNavigate()
-  const { userRole, reset } = useStore()
+  const { reset } = useStore()
   
   const handleReset = () => {
     reset()
@@ -16,14 +16,10 @@ export default function App(){
   
   useEffect(() => {
     function onKey(e: KeyboardEvent){
-      if(e.key === 'f' || e.key === 'F'){ if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen() }
-      if(e.key === ' '){ e.preventDefault(); const path = window.location.pathname
-        if(path === '/') nav('/radar')
-        else if(path.startsWith('/radar')) nav('/issue/energy-20250919')
-        else if(path.startsWith('/issue')) nav('/roi')
-        else if(path.startsWith('/roi')) nav('/export/energy-20250919')
+      if(e.key === 'f' || e.key === 'F'){ 
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen()
+        else document.exitFullscreen() 
       }
-      if(e.key === 'b' || e.key === 'B'){ history.back() }
       if(e.key === 'r' || e.key === 'R'){ handleReset() }
     }
     window.addEventListener('keydown', onKey)
@@ -34,18 +30,33 @@ export default function App(){
     <div className="min-h-screen">
       <ReviewBar />
       <Palette />
-      <MobileController />
+      <NavigationController />
       <Outlet />
-      {userRole && (
+      
+      {/* Bottom left controls */}
+      <div className="fixed bottom-4 left-4 flex gap-2 z-20">
         <button 
           onClick={handleReset}
-          className="fixed bottom-4 left-4 btn opacity-70 hover:opacity-100 text-sm hidden md:block"
+          className="btn text-xs px-3 py-1 opacity-60 hover:opacity-100 transition-opacity"
           title="Reset and change role"
         >
           Reset (R)
         </button>
-      )}
-      <div className="kb hidden md:block">Keys: F (fullscreen) • Space (advance) • B (back) • R (reset) • ⌘K/Ctrl‑K (palette)</div>
+        <button 
+          onClick={() => {
+            const event = new KeyboardEvent('keydown', { 
+              key: 'k', 
+              ctrlKey: true,
+              metaKey: true 
+            })
+            window.dispatchEvent(event)
+          }}
+          className="btn text-xs px-3 py-1 opacity-60 hover:opacity-100 transition-opacity"
+          title="Open command palette"
+        >
+          ⌘K
+        </button>
+      </div>
     </div>
   )
 }

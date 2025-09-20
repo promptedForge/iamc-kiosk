@@ -6,12 +6,25 @@ import '../styles/radar.css'
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8787'
 
+interface PatternItem {
+  id: string
+  title: string
+  quadrant: string
+  score: number
+  visibility?: string[]
+  priority: string
+  trend?: string
+  requiresSignoff?: boolean
+  signoffs?: Record<string, boolean>
+}
+
 export default function Radar(){
   const { data } = useQuery({ queryKey: ['classify'], queryFn: async()=> (await fetch(`${API}/classify/today`)).json() })
   const nav = useNavigate()
-  const { userRole, signoffs, updateSignoff } = useStore()
-  const [showRequestSignoff, setShowRequestSignoff] = useState(false)
+  const { userRole, signoffs: globalSignoffs } = useStore()
   const [feedExpanded, setFeedExpanded] = useState(false)
+  const [expandedItem, setExpandedItem] = useState<string | null>(null)
+  const [localSignoffs, setLocalSignoffs] = useState<Record<string, Record<string, boolean>>>({})
   const [processingFeed, setProcessingFeed] = useState<Array<{text: string, status: 'incoming' | 'processing' | 'analyzed', timestamp: string}>>([])
   const [lastLoginTime] = useState(() => {
     const now = new Date()
@@ -20,9 +33,9 @@ export default function Radar(){
   })
 
   // Filter items based on user role
-  const allItems = (data ?? []) as any[]
+  const allItems = (data ?? []) as PatternItem[]
   const items = allItems.filter(item => 
-    !item.visibility || item.visibility.includes(userRole)
+    !item.visibility || item.visibility.includes(userRole || '')
   )
 
   // Simulate processing feed with status transitions
@@ -56,7 +69,6 @@ export default function Radar(){
       setProcessingFeed(prev => {
         const maxItems = feedExpanded ? 15 : 8
         const updated = [...prev.slice(-maxItems), newFeed]
-        // Transition older items through processing stages
         return updated.map((item, idx) => {
           if (idx < updated.length - 3 && item.status === 'incoming') {
             return { ...item, status: 'processing' }
@@ -79,8 +91,13 @@ export default function Radar(){
     return () => clearInterval(interval)
   }, [feedExpanded])
 
-  const groups: Record<string, any[]> = { Policy:[], Industry:[], Advocacy:[], Risk:[] }
-  for(const it of items){ (groups as any)[it.quadrant]?.push(it) }
+  const groups: Record<string, PatternItem[]> = { Policy:[], Industry:[], Advocacy:[], Risk:[] }
+  for(const it of items){ 
+    const quadrant = it.quadrant
+    if (groups[quadrant]) {
+      groups[quadrant].push(it)
+    }
+  }
 
   const getPriorityColor = (priority: string) => {
     switch(priority) {
@@ -91,8 +108,16 @@ export default function Radar(){
     }
   }
 
-  const otherRole = userRole === 'Media Team' ? 'Strategy Head' : 'Media Team'
-  const canRequestSignoff = !signoffs[otherRole as 'Media Team' | 'Strategy Head']
+  const handleSignoff = async (itemId: string, role: string) => {
+    // In real app, this would make an API call
+    setLocalSignoffs(prev => ({
+      ...prev,
+      [itemId]: {
+        ...prev[itemId],
+        [role]: true
+      }
+    }))
+  }
 
   const displayedFeedItems = feedExpanded 
     ? processingFeed.slice(-15) 
@@ -104,37 +129,19 @@ export default function Radar(){
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 pointer-events-none" />
       
       {/* Since last login header */}
-      <div className="text-center pt-8 pb-4 relative z-10">
+      <div className="text-center pt-12 pb-8 relative z-10">
         <h1 className="text-3xl md:text-4xl font-bold mb-2">Intelligence Brief</h1>
         <p className="text-lg opacity-80">Since your last login at {lastLoginTime}</p>
         <p className="text-sm opacity-60 mt-1">5 minutes to full clarity</p>
       </div>
 
-      {/* User Role & Signoff Status */}
-      <div className="fixed top-16 md:top-4 right-4 card p-3 md:p-4 bg-opacity-90 backdrop-blur text-sm md:text-base z-30">
-        <div className="text-sm opacity-70 mb-1">Signed in as</div>
-        <div className="text-lg font-bold mb-3">{userRole}</div>
-        <div className="space-y-1 text-sm">
-          <div>Media Team: {signoffs['Media Team'] ? '✅' : '⬜'}</div>
-          <div>Strategy Head: {signoffs['Strategy Head'] ? '✅' : '⬜'}</div>
-        </div>
-        {canRequestSignoff && (
-          <button 
-            className="btn mt-3 text-sm w-full"
-            onClick={() => setShowRequestSignoff(true)}
-          >
-            Request {otherRole} Signoff
-          </button>
-        )}
-      </div>
-
       {/* Cockpit-style Analyzed Patterns Grid */}
-      <div className="px-4 md:px-12 pb-32">
-        <div className="mb-4">
-          <h2 className="text-xl font-semibold mb-4 opacity-90">Analyzed Patterns & Trends</h2>
+      <div className="px-6 md:px-16 pb-32">
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold opacity-90">Analyzed Patterns & Trends</h2>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 perspective-1000">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 perspective-1000">
           {(['Policy','Industry','Advocacy','Risk'] as const).map((q, qIdx) => {
             const isLeft = qIdx % 2 === 0
             const isTop = qIdx < 2
@@ -145,50 +152,108 @@ export default function Radar(){
                 className="relative"
                 style={{
                   transform: `
-                    rotateY(${isLeft ? '1deg' : '-1deg'}) 
-                    rotateX(${isTop ? '-1deg' : '1deg'})
+                    rotateY(${isLeft ? '0.5deg' : '-0.5deg'}) 
+                    rotateX(${isTop ? '-0.5deg' : '0.5deg'})
                   `,
                   transformStyle: 'preserve-3d'
                 }}
               >
-                <div className="card p-6 bg-[#0a1929]/90 backdrop-blur-md border border-cyan-900/30 shadow-2xl">
+                <div className="card p-8 bg-[#0a1929]/90 backdrop-blur-md border border-cyan-900/30 shadow-2xl min-h-[400px]">
                   <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/10 to-transparent pointer-events-none rounded-lg" />
                   
                   <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-between mb-6">
                       <div className="text-2xl font-bold text-cyan-100">{q}</div>
                       <div className="text-xs opacity-60 uppercase text-cyan-300">Pattern Analysis</div>
                     </div>
                     
-                    <div className="space-y-2 max-h-96 overflow-y-auto custom-scrollbar">
+                    <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar pr-2">
                       {groups[q].length === 0 ? (
                         <div className="text-sm opacity-50 italic">Processing patterns...</div>
                       ) : (
-                        groups[q].map(it => (
-                          <div 
-                            key={it.id} 
-                            className="relative p-3 bg-[#11253c]/80 rounded-lg hover:bg-[#132a44] cursor-pointer transition-all hover:scale-[1.02]"
-                            onClick={()=> nav(`/issue/${it.id}`)}
-                          >
-                            <div className="flex justify-between items-start mb-1">
-                              <div className="font-semibold text-sm pr-2">{it.title}</div>
-                              <div className={`text-xs font-bold ${getPriorityColor(it.priority)} shrink-0`}>
-                                {it.priority?.toUpperCase()}
+                        groups[q].map(it => {
+                          const isExpanded = expandedItem === it.id
+                          const itemSignoffs = localSignoffs[it.id] || {}
+                          const needsSignoff = it.priority === 'critical' || it.priority === 'high'
+                          
+                          return (
+                            <div 
+                              key={it.id} 
+                              className="relative"
+                            >
+                              <div 
+                                className="p-4 bg-[#11253c]/80 rounded-lg hover:bg-[#132a44] cursor-pointer transition-all hover:scale-[1.01]"
+                                onClick={()=> nav(`/issue/${it.id}`)}
+                              >
+                                <div className="flex justify-between items-start mb-2">
+                                  <div className="font-semibold text-sm pr-2">{it.title}</div>
+                                  <div className={`text-xs font-bold ${getPriorityColor(it.priority)} shrink-0`}>
+                                    {it.priority?.toUpperCase()}
+                                  </div>
+                                </div>
+                                {it.trend && (
+                                  <div className="text-xs opacity-60 italic mb-2">↗ {it.trend}</div>
+                                )}
+                                <div className="flex justify-between items-center">
+                                  <div className="text-xs opacity-70">Confidence: {Math.round(it.score*100)}%</div>
+                                  <div className="flex items-center gap-2">
+                                    {it.visibility && it.visibility.length === 1 && (
+                                      <div className="text-xs opacity-50">
+                                        {it.visibility[0] === userRole ? '👁 Exclusive' : '🔒 Restricted'}
+                                      </div>
+                                    )}
+                                    {needsSignoff && (
+                                      <button 
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          setExpandedItem(isExpanded ? null : it.id)
+                                        }}
+                                        className="text-xs bg-cyan-900/50 hover:bg-cyan-800/50 px-2 py-1 rounded transition-all"
+                                      >
+                                        {itemSignoffs[userRole || ''] ? '✅ Signed' : 'Sign off'}
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                            {(it as any).trend && (
-                              <div className="text-xs opacity-60 italic mb-1">↗ {(it as any).trend}</div>
-                            )}
-                            <div className="flex justify-between items-center">
-                              <div className="text-xs opacity-70">Confidence: {Math.round(it.score*100)}%</div>
-                              {it.visibility && it.visibility.length === 1 && (
-                                <div className="text-xs opacity-50">
-                                  {it.visibility[0] === userRole ? '👁 Exclusive' : '🔒 Restricted'}
+                              
+                              {/* Signoff Drawer */}
+                              {isExpanded && needsSignoff && (
+                                <div className="mt-2 p-3 bg-[#0a1929]/80 rounded-lg border border-cyan-900/30">
+                                  <div className="text-xs font-semibold mb-2">Signoffs Required:</div>
+                                  <div className="space-y-1">
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-xs">Media Team:</span>
+                                      {userRole === 'Media Team' && !itemSignoffs['Media Team'] ? (
+                                        <button 
+                                          onClick={() => handleSignoff(it.id, 'Media Team')}
+                                          className="text-xs btn px-2 py-0.5"
+                                        >
+                                          Sign
+                                        </button>
+                                      ) : (
+                                        <span className="text-xs">{itemSignoffs['Media Team'] ? '✅' : '⬜'}</span>
+                                      )}
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-xs">Strategy Head:</span>
+                                      {userRole === 'Strategy Head' && !itemSignoffs['Strategy Head'] ? (
+                                        <button 
+                                          onClick={() => handleSignoff(it.id, 'Strategy Head')}
+                                          className="text-xs btn px-2 py-0.5"
+                                        >
+                                          Sign
+                                        </button>
+                                      ) : (
+                                        <span className="text-xs">{itemSignoffs['Strategy Head'] ? '✅' : '⬜'}</span>
+                                      )}
+                                    </div>
+                                  </div>
                                 </div>
                               )}
                             </div>
-                          </div>
-                        ))
+                          )
+                        })
                       )}
                     </div>
                   </div>
@@ -201,7 +266,7 @@ export default function Radar(){
 
       {/* Toggleable Processing Feed */}
       <div className={`fixed bottom-0 left-1/2 transform -translate-x-1/2 transition-all duration-500 ease-in-out z-40 ${
-        feedExpanded ? 'w-[90%] max-w-4xl' : 'w-[80%] max-w-2xl'
+        feedExpanded ? 'w-[90%] max-w-5xl' : 'w-[80%] max-w-3xl'
       }`}>
         <div className={`bg-[#0a1929]/95 backdrop-blur-lg rounded-t-2xl shadow-2xl border border-cyan-900/50 transition-all ${
           feedExpanded ? 'h-[60vh]' : 'h-auto'
@@ -262,30 +327,6 @@ export default function Radar(){
           </div>
         </div>
       </div>
-
-      {/* Request Signoff Modal */}
-      {showRequestSignoff && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowRequestSignoff(false)}>
-          <div className="card p-6 max-w-md" onClick={e => e.stopPropagation()}>
-            <h3 className="text-xl font-bold mb-4">Request Signoff</h3>
-            <p className="mb-4">
-              Request {otherRole} to review and sign off on the current intelligence brief?
-            </p>
-            <div className="flex gap-3">
-              <button className="btn flex-1" onClick={() => {
-                // In real app, this would send a notification
-                alert(`Signoff request sent to ${otherRole}`)
-                setShowRequestSignoff(false)
-              }}>
-                Send Request
-              </button>
-              <button className="btn flex-1 opacity-70" onClick={() => setShowRequestSignoff(false)}>
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
