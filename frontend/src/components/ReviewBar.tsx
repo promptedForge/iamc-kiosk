@@ -38,8 +38,9 @@ export default function ReviewBar(){
   async function resume(){ await fetch(`${API}/review/resume`, {method:'POST'}); refresh() }
 
   return (
-    <div className="fixed top-0 left-0 right-0 p-2 bg-black/40 backdrop-blur z-40">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-2 text-sm">
+    <div className="fixed top-0 left-0 right-0 bg-black/40 backdrop-blur z-40">
+      <div className="w-full px-2 py-2">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-2 text-sm">
         <div className="flex items-center gap-2 md:gap-4">
           <span className="opacity-80 hidden sm:inline">Human Review:</span>
           <span className="opacity-80 sm:hidden">HR:</span>
@@ -65,6 +66,7 @@ export default function ReviewBar(){
           {userRole === 'Strategy Head' && !signoffs['Strategy Head'] && (
             <button className="btn text-xs px-2 py-1" onClick={()=> sign('Strategy Head')}>Sign</button>
           )}
+        </div>
         </div>
       </div>
     </div>

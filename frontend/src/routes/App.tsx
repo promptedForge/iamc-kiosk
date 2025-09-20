@@ -166,7 +166,7 @@ export default function App(){
       </div>
       
       {/* Demo Control Hotkeys panel - positioned left of thumb controller */}
-      {isKioskMode && (
+      {(
         <div className="fixed bottom-6 right-[calc(5rem+3.5rem+1.5rem)] bg-black/80 backdrop-blur-sm p-3 rounded-lg text-xs opacity-40 hover:opacity-80 transition-opacity z-20 border border-cyan-900/30">
           <div className="font-semibold mb-1 text-cyan-300">Demo Control Hotkeys:</div>
           <div className="space-y-0.5 text-gray-300">

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
+import DemoHotkeys from '../components/DemoHotkeys'
 
 export default function Framing(){
   const nav = useNavigate()
@@ -26,7 +27,8 @@ export default function Framing(){
   }
 
   return (
-    <div className="grid place-items-center h-screen bg-gradient-to-b from-navy to-steel">
+    <div className="grid place-items-center h-screen bg-gradient-to-b from-navy to-steel relative">
+      <DemoHotkeys />
       <div className="text-center">
         <div className="text-5xl font-extrabold tracking-tight">From Noise → Clarity in 5 Minutes</div>
         <div className="opacity-80 mt-4 text-lg">What your team wakes up to daily.</div>
