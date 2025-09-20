@@ -1,0 +1,7 @@
+state:
+  schemas:
+    roles: v1
+    hypothesis: v1
+    runtime: v1
+    ui-config: v1
+signed_by: orchestrator

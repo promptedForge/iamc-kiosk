@@ -1,8 +1,8 @@
 import { create } from 'zustand'
 
 interface AppState {
-  userRole: 'Media Team' | 'Strategy Head' | null
-  setUserRole: (role: 'Media Team' | 'Strategy Head' | null) => void
+  userRole: 'Media Team' | 'Strategy Head' | 'Data Scientist' | null
+  setUserRole: (role: 'Media Team' | 'Strategy Head' | 'Data Scientist' | null) => void
   signoffs: {
     'Media Team': boolean
     'Strategy Head': boolean
