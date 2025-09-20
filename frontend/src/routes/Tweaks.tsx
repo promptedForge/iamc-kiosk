@@ -18,7 +18,7 @@ export default function Tweaks(){
   }
 
   return (
-    <div className="min-h-screen px-10 py-20 bg-navy text-white">
+    <div className="min-h-screen px-10 pt-28 pb-20 bg-navy text-white">
       <div className="max-w-5xl mx-auto space-y-6">
         <div className="text-3xl font-extrabold">Last Week + Tweaks</div>
         <p className="opacity-80">Upload last week’s brief or marked-up example to guide this week’s output. This builds the learning loop (demo-safe; no publishing).</p>

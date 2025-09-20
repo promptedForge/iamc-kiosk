@@ -140,14 +140,20 @@ Generate:
 2. Email paragraph for internal team (action-oriented, specific next steps)
 3. Press excerpt (neutral tone, factual)
 
-Format as JSON with keys: linkedin, email_paragraph, press_excerpt`
+Return ONLY a valid JSON object with exactly these keys:
+{
+  "linkedin": "LinkedIn post content here",
+  "email_paragraph": "Email paragraph content here",
+  "press_excerpt": "Press excerpt content here"
+}`
 
+      console.log('Generating assets with model:', model)
       const response = await llm.createChatCompletion({
         model,
         messages: [
           {
             role: 'system',
-            content: 'You are a strategic communications expert for a human rights intelligence organization. Generate clear, actionable content.'
+            content: 'You are a strategic communications expert for a human rights intelligence organization. Generate clear, actionable content. Always respond with valid JSON only, no additional text or markdown.'
           },
           {
             role: 'user',
@@ -158,16 +164,38 @@ Format as JSON with keys: linkedin, email_paragraph, press_excerpt`
         max_tokens: 1024
       })
       
+      console.log('LLM response:', response)
+      
       try {
-        const generatedAssets = JSON.parse(response.choices[0].message.content)
+        // Clean the response in case of markdown formatting
+        let content = response.choices[0].message.content.trim()
+        // Remove markdown code blocks if present
+        content = content.replace(/^```json\n?/, '').replace(/\n?```$/, '')
+        // Parse the JSON
+        const generatedAssets = JSON.parse(content)
         setAssets(generatedAssets)
       } catch (parseError) {
-        // Fallback if JSON parsing fails
-        setAssets({
-          linkedin: `${brief.title}\n\nKey insights:\n• ${editableContent.risks?.[0] || brief.risks[0]}\n• ${editableContent.opportunities?.[0] || brief.opportunities[0]}\n\n#HumanRights #IntelligenceBrief`,
-          email_paragraph: `Team,\n\nRegarding ${brief.title}: ${editableContent.summary || brief.summary}\n\nRecommended actions: ${editableContent[`actions_${lens}`]?.[0] || lensBrief?.actions[0] || 'Monitor situation'}`,
-          press_excerpt: `${brief.title}. ${editableContent.summary || brief.summary}`
-        })
+        console.error('Failed to parse LLM response:', parseError, response.choices[0].message.content)
+        // Try to extract content using regex as fallback
+        const content = response.choices[0].message.content
+        const linkedinMatch = content.match(/"linkedin"\s*:\s*"([^"]*)"/)
+        const emailMatch = content.match(/"email_paragraph"\s*:\s*"([^"]*)"/)
+        const pressMatch = content.match(/"press_excerpt"\s*:\s*"([^"]*)"/)
+        
+        if (linkedinMatch && emailMatch && pressMatch) {
+          setAssets({
+            linkedin: linkedinMatch[1].replace(/\\n/g, '\n'),
+            email_paragraph: emailMatch[1].replace(/\\n/g, '\n'),
+            press_excerpt: pressMatch[1].replace(/\\n/g, '\n')
+          })
+        } else {
+          // Ultimate fallback
+          setAssets({
+            linkedin: `${brief.title}\n\nKey insights:\n• ${editableContent.risks?.[0] || brief.risks[0]}\n• ${editableContent.opportunities?.[0] || brief.opportunities[0]}\n\n#HumanRights #IntelligenceBrief`,
+            email_paragraph: `Team,\n\nRegarding ${brief.title}: ${editableContent.summary || brief.summary}\n\nRecommended actions: ${editableContent[`actions_${lens}`]?.[0] || lensBrief?.actions[0] || 'Monitor situation'}`,
+            press_excerpt: `${brief.title}. ${editableContent.summary || brief.summary}`
+          })
+        }
       }
     } catch (error) {
       console.error('Error generating assets:', error)
@@ -239,7 +267,7 @@ Format as JSON with keys: linkedin, email_paragraph, press_excerpt`
   }
 
   return (
-    <div className={`min-h-screen ${responsivePadding.page} ${isMobile ? 'pt-24' : 'pt-20'} bg-[radial-gradient(1000px_600px_at_10%_10%,#12345633,transparent)]`}>
+    <div className={`min-h-screen ${responsivePadding.page} ${isMobile ? 'pt-28' : 'pt-24'} bg-[radial-gradient(1000px_600px_at_10%_10%,#12345633,transparent)]`}>
       <div className={`${isMobile ? 'max-w-full' : 'max-w-5xl'} mx-auto ${responsiveGap.medium} flex flex-col`}>
         <div className={`flex ${isMobile ? 'flex-col gap-4' : 'items-start justify-between'} mb-4`}>
           <div className="flex-1">
