@@ -102,6 +102,8 @@ export default function App(){
   return (
     <div className="min-h-screen">
       <ReviewBar />
+      {/* Spacer div to account for fixed ReviewBar height */}
+      <div className="h-16 md:h-14" />
       <Palette />
       <NavigationController />
       <DemoWalkthrough />

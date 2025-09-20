@@ -131,7 +131,7 @@ export default function Radar(){
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 pointer-events-none" />
       
       {/* Since last login header */}
-      <div className={`text-center ${isMobile ? 'pt-28' : 'pt-24'} pb-8 relative z-10`}>
+      <div className={`text-center pb-8 relative z-10`}>
         <h1 className={`${responsiveText.display} font-bold mb-2`}>Intelligence Brief</h1>
         <p className="text-lg opacity-80">Since your last login at {lastLoginTime}</p>
         <p className="text-sm opacity-60 mt-1">5 minutes to full clarity</p>

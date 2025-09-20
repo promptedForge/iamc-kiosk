@@ -253,7 +253,7 @@ export default function Issue(){
   }
 
   return (
-    <div className={`min-h-screen ${responsivePadding.page} ${isMobile ? 'pt-40' : 'pt-32'} pb-8 bg-[radial-gradient(1000px_600px_at_10%_10%,#12345633,transparent)]`}>
+    <div className={`min-h-screen ${responsivePadding.page} pb-8 bg-[radial-gradient(1000px_600px_at_10%_10%,#12345633,transparent)]`}>
       <div className={`${isMobile ? 'max-w-full px-2' : 'max-w-5xl'} mx-auto ${responsiveGap.medium} flex flex-col`}>
         <div className={`flex ${isMobile ? 'flex-col gap-4' : 'items-start justify-between'} mb-4`}>
           <div className="flex-1">
