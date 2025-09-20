@@ -195,7 +195,15 @@ export default function Radar(){
                                   <div className="text-xs opacity-60 italic mb-2">↗ {it.trend}</div>
                                 )}
                                 <div className="flex justify-between items-center">
-                                  <div className="text-xs opacity-70">Confidence: {Math.round(it.score*100)}%</div>
+                                  <div className="flex items-center gap-3">
+                                    <div className="text-xs opacity-70">Confidence: {Math.round(it.score*100)}%</div>
+                                    {/* Show hypothesis indicator for specific high-priority items */}
+                                    {(it.priority === 'critical' || it.priority === 'high') && it.id === 'farmers-20250919' && (
+                                      <div className="text-xs bg-purple-600/20 text-purple-400 px-2 py-0.5 rounded-full animate-pulse">
+                                        2 candidate hypotheses →
+                                      </div>
+                                    )}
+                                  </div>
                                   <div className="flex items-center gap-2">
                                     {it.visibility && it.visibility.length === 1 && (
                                       <div className="text-xs opacity-50">
