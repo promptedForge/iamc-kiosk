@@ -124,8 +124,3 @@ Demonstrate how IAMC turns overwhelming daily signals into **governed, credible 
 * Perform safety every time: Interrupt block → approvals → allowed export.
 * Keep language sober; avoid jargon.
 * If asked about internals, answer once, then return to mission/impact.
-
----
-
-# `DEMO_VIDEO_TRANSCRIPT.md`
-
