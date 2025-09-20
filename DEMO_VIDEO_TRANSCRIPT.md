@@ -1,58 +1,17 @@
-# IAMC Kiosk Demo Video Transcript (90 seconds)
-
-*[Note: Read naturally, timing markers are approximate. Pace yourself to match the automatic demo progression.]*
+> **Context**: This transcript matches the 5-minute walkthrough but can be delivered in \~90–120 seconds for a highlight reel. No technical jargon; mission-first.
 
 ---
 
-## [0:00-0:05] Welcome Screen
-"From noise to clarity in 5 minutes. This is what your intelligence team wakes up to daily - hundreds of signals that need to be transformed into actionable insights."
+**“Every morning brings more signals than any team can process. This is how we turn that noise into responsible action—fast—without ever letting go of human judgment.**
 
-## [0:05-0:12] Role Selection
-"Let's sign in as the Media Team. The platform adapts to each user's role, showing only relevant intelligence. 
+We start with today’s radar. Across policy, industry, advocacy, and operational risk, we see what matters at a glance. From here, we open the single most consequential issue. The brief is simple by design: what’s happening, the three biggest risks, the three clearest opportunities, and the three actions that move us forward. The evidence is right behind every claim with source and confidence visible, so we neither overstate nor underplay.
 
-Welcome, Media Team. Let's head to your dashboard."
+Leaders get what they need immediately. The CEO lens focuses the public stance, the COO lens reinforces safeguards, and Directors see actionable talking points for the field—aligned, not ad hoc.
 
-## [0:12-0:20] Intelligence Dashboard Overview
-"Here's your Intelligence Brief - everything that's happened since you last logged in, just 5 minutes ago. 
+And we never publish by accident. If anything is sensitive, we hit Interrupt. Nothing moves without two approvals—Analyst and Strategy Head. Only when both are green can we export a sharable package for communication and coordination.
 
-Notice how the platform has already analyzed patterns across four key areas: Policy, Industry, Advocacy, and Risk. Each item shows priority levels and confidence scores."
+When we do move, we move together. Drafts for LinkedIn, email, and press are ready to refine and tune by audience, so our voice remains credible and consistent. The capacity gain is real: hours reclaimed from manual synthesis become time invested in verification, outreach, and alliance work that protects people and institutions.
 
-## [0:20-0:28] Processing Feed
-"Down here is the real magic - the Processing Feed. Watch as 15 different intelligence sources are being analyzed in real-time. Blue dots are incoming, yellow means processing, and green means fully analyzed and ready for review."
+When we miss the mark, we capture it. Last Week + Tweaks lets us upload a prior report with notes, so the next brief reflects real feedback and context.
 
-## [0:28-0:35] Navigating to Issue
-"Let's drill into this critical farmers subsidy issue. The platform has already identified it as high priority based on multiple converging signals."
-
-## [0:35-0:45] Issue Brief & Perspectives
-"Here's the full brief - risks, opportunities, and recommendations. Notice how everything is editable. 
-
-Watch as we switch perspectives - from CEO view to COO. The talking points and actions automatically adjust to each executive's needs."
-
-## [0:45-0:55] Asset Generation
-"Now let's generate communication assets. Even with AI offline, the platform uses smart templates to create LinkedIn posts, email copy, and press statements - all tailored to your selected audiences."
-
-## [0:55-0:62] ROI Impact
-"Here's the impact - 2.3 hours saved today alone. That's like having an extra quarter of an FTE on your team. What used to take 3 hours now takes just 45 minutes."
-
-## [0:62-0:72] Export & Dual Signoff
-"For sensitive materials, we require dual signoff. Watch as we switch to the Strategy Head role. The platform enforces governance while keeping the workflow smooth."
-
-## [0:72-0:80] Strategy View & Learning Loop
-"From the Strategy Head perspective, you see different intelligence priorities. 
-
-And here's how the system gets smarter - upload last week's brief with your feedback, and the platform learns your preferences for next time."
-
-## [0:80-0:90] Closing
-"That's the IAMC platform - transforming information overload into strategic clarity in under 5 minutes. Your team stays ahead of the narrative, not chasing it.
-
-From noise to clarity. From reactive to proactive. That's intelligence at the speed of business."
-
----
-
-## Director's Notes:
-- Keep energy high but professional
-- Emphasize time savings and efficiency
-- Point to screen elements as they appear/change
-- Slight pause when screens transition
-- Sound excited about the real-time processing feed
-- Emphasize "5 minutes" theme throughout
+This is tomorrow’s capability, controlled today: faster signal to action, with integrity and human judgment in the loop—serving peace, pluralism, and social justice.”\*\*
