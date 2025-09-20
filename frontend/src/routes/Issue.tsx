@@ -144,7 +144,14 @@ export default function Issue(){
       
       console.log('Generating comprehensive report...')
       const report = await reportGenerator.generateReport(
-        reportData,
+        {
+          ...reportData,
+          config: {
+            audience,
+            lens,
+            selectedModel: selectedModel || 'anthropic/claude-sonnet-4-20250514-1m'
+          }
+        },
         audience,
         selectedModel || 'anthropic/claude-sonnet-4-20250514-1m'
       )
@@ -246,8 +253,8 @@ export default function Issue(){
   }
 
   return (
-    <div className={`min-h-screen ${responsivePadding.page} ${isMobile ? 'pt-32' : 'pt-28'} pb-8 bg-[radial-gradient(1000px_600px_at_10%_10%,#12345633,transparent)]`}>
-      <div className={`${isMobile ? 'max-w-full' : 'max-w-5xl'} mx-auto ${responsiveGap.medium} flex flex-col`}>
+    <div className={`min-h-screen ${responsivePadding.page} ${isMobile ? 'pt-40' : 'pt-32'} pb-8 bg-[radial-gradient(1000px_600px_at_10%_10%,#12345633,transparent)]`}>
+      <div className={`${isMobile ? 'max-w-full px-2' : 'max-w-5xl'} mx-auto ${responsiveGap.medium} flex flex-col`}>
         <div className={`flex ${isMobile ? 'flex-col gap-4' : 'items-start justify-between'} mb-4`}>
           <div className="flex-1">
             <div className={`${responsiveText.title} font-extrabold mb-3 ${isMobile ? 'pr-2' : ''}`}>{brief.title}</div>

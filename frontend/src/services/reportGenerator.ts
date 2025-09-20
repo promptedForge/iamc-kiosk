@@ -97,7 +97,7 @@ IMPORTANT: Return ONLY valid JSON matching the exact structure requested, with n
           }
         ],
         temperature: 0.3,
-        max_tokens: 4096
+        max_tokens: 6144
       })
 
       console.log('Report generation response:', response)
@@ -123,7 +123,7 @@ IMPORTANT: Return ONLY valid JSON matching the exact structure requested, with n
    * Build the comprehensive prompt for report generation
    */
   private buildReportPrompt(data: ReportData, audience: string): string {
-    const { brief, hypotheses, lensBrief } = data
+    const { brief, hypotheses, lensBrief, config } = data
     
     return `Generate a comprehensive intelligence report based on the following data:
 
@@ -155,6 +155,13 @@ Talking Points: ${JSON.stringify(lensBrief.talking_points)}
 ` : ''}
 
 TARGET AUDIENCE: ${audience}
+CURRENT LENS: ${config?.lens || 'CEO'}
+SELECTED MODEL: ${config?.selectedModel || 'default'}
+
+${config ? `ADDITIONAL CONTEXT:
+- Report is being generated for ${audience} perspective
+- Focus on ${config.lens || 'executive'} lens priorities
+- Emphasize actionable insights for immediate implementation` : ''}
 
 Generate a comprehensive report with the following JSON structure:
 {
