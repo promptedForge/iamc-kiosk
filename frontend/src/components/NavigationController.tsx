@@ -17,7 +17,7 @@ export default function NavigationController() {
       else if (path.startsWith('/radar')) {
         // Navigate to the first issue from mock data
         // Using a default ID that exists in our mock data
-        navigate('/issue/farmers-20250919')
+        navigate('/issue/violence-20250919')
       }
       else if (path.startsWith('/issue')) navigate('/roi')
       else if (path.startsWith('/roi')) navigate('/export/latest')
