@@ -184,7 +184,7 @@ export default function Radar(){
                               className="relative"
                             >
                               <div 
-                                className="p-4 bg-[#11253c]/80 rounded-lg hover:bg-[#132a44] cursor-pointer transition-all hover:scale-[1.01] clickable-card"
+                                className={`p-4 bg-[#11253c]/80 rounded-lg hover:bg-[#132a44] cursor-pointer transition-all hover:scale-[1.01] clickable-card ${it.id === 'violence-20250919' ? 'ring-2 ring-red-500/50 bg-red-900/10' : ''}`}
                                 onClick={()=> nav(`/issue/${it.id}`)}
                               >
                                 <div className={`flex ${isMobile ? 'flex-col gap-1' : 'justify-between items-start'} mb-2`}>
@@ -200,9 +200,9 @@ export default function Radar(){
                                   <div className="flex items-center gap-3">
                                     <div className="text-xs opacity-70">Confidence: {Math.round(it.score*100)}%</div>
                                     {/* Show hypothesis indicator for specific high-priority items */}
-                                    {(it.priority === 'critical' || it.priority === 'high') && it.id === 'farmers-20250919' && (
+                                    {(it.priority === 'critical' || it.priority === 'high') && (it.id === 'farmers-20250919' || it.id === 'violence-20250919') && (
                                       <div className="text-xs bg-purple-600/20 text-purple-400 px-2 py-0.5 rounded-full animate-pulse">
-                                        2 candidate hypotheses →
+                                        {it.id === 'violence-20250919' ? '3 critical patterns →' : '2 candidate hypotheses →'}
                                       </div>
                                     )}
                                   </div>

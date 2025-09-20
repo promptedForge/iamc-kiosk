@@ -13,6 +13,19 @@
     "provenance_hint": ["The Hindu", "Indian Express", "Scroll.in"]
   },
   {
+    "id": "violence-20250919",
+    "title": "CRITICAL: Escalating communal violence - Lynching incidents in Rajasthan require immediate response",
+    "quadrant": "Risk",
+    "score": 0.96,
+    "visibility": ["Media Team", "Strategy Head"],
+    "priority": "critical",
+    "trend": "Violence spreading to neighboring districts; social media amplification detected",
+    "geo": ["IN-RJ", "IN-HR"],
+    "topic": ["violence", "religious", "crisis"],
+    "kind": "issue",
+    "provenance_hint": ["IAMC Field Reports", "Local NGO Network", "Police Reports"]
+  },
+  {
     "id": "press-20250919",
     "title": "Alert: 23 journalists detained in 48 hours during coverage of protests",
     "quadrant": "Risk",
