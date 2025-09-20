@@ -365,13 +365,13 @@ export default function Issue(){
 
         <div className="card p-4">
           <div className="flex items-center gap-2 mb-3">
-            <span className="opacity-80">Audience:</span>
+            <span className="opacity-80">Report Perspective:</span>
             {(["CEO","COO","Director","Board","Members"] as const).map(a => 
               <button key={a} className={`btn ${a===audience?"ring-2 ring-spotlight":""}`} onClick={()=> setAudience(a)}>{a}</button>
             )}
           </div>
           <div className="flex items-center justify-between mb-3">
-            <div className="font-semibold">Assets</div>
+            <div className="font-semibold">Communication Assets</div>
             <div className="flex items-center gap-2">
               <span className="text-xs opacity-60">⚠️ AI currently offline - using templates</span>
               <button 
@@ -386,7 +386,7 @@ export default function Issue(){
           {!!assets && (
             <div className="grid grid-cols-3 gap-4 text-sm">
               <div>
-                <div className="font-semibold mb-1">LinkedIn</div>
+                <div className="font-semibold mb-1">Social Media</div>
                 <textarea 
                   className="w-full bg-[#11253c] rounded p-2 text-xs min-h-[120px] resize-y"
                   value={assets.linkedin}
