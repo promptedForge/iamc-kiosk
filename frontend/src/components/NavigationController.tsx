@@ -4,6 +4,7 @@ import { useStore } from '../store'
 
 export default function NavigationController() {
   const [isOpen, setIsOpen] = useState(false)
+  const [activeKey, setActiveKey] = useState<string | null>(null)
   const navigate = useNavigate()
   const location = useLocation()
   const { reset } = useStore()
@@ -27,15 +28,46 @@ export default function NavigationController() {
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
+      // Toggle controller with Ctrl/Cmd+N
       if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
         e.preventDefault()
         setIsOpen(!isOpen)
+      }
+      
+      // Arrow key navigation - only when no modifiers are pressed
+      if (!e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey) {
+        switch(e.key) {
+          case 'ArrowLeft':
+            e.preventDefault()
+            setActiveKey('left')
+            handleNavigation('back')
+            setTimeout(() => setActiveKey(null), 150)
+            break
+          case 'ArrowRight':
+            e.preventDefault()
+            setActiveKey('right')
+            handleNavigation('forward')
+            setTimeout(() => setActiveKey(null), 150)
+            break
+          case 'ArrowUp':
+            e.preventDefault()
+            setActiveKey('up')
+            navigate('/tweaks')
+            setTimeout(() => setActiveKey(null), 150)
+            break
+          case 'ArrowDown':
+            e.preventDefault()
+            setActiveKey('down')
+            navigate('/export/latest')
+            setTimeout(() => setActiveKey(null), 150)
+            break
+        }
       }
     }
     
     window.addEventListener('keydown', handleKeyPress)
     return () => window.removeEventListener('keydown', handleKeyPress)
-  }, [isOpen])
+  }, [isOpen, location.pathname])
 
   if (isOpen) {
     return (
@@ -49,23 +81,34 @@ export default function NavigationController() {
         {/* Controller */}
         <div className="fixed bottom-6 right-6 z-50">
           <div className="bg-navy/95 backdrop-blur-lg rounded-2xl p-4 shadow-2xl border border-white/10">
+            {/* Help Text */}
+            <div className="text-xs text-center opacity-60 mb-3">
+              Use arrow keys to navigate
+            </div>
+            
             {/* Directional Pad */}
             <div className="grid grid-cols-3 gap-2 mb-4">
               <div />
               <button 
                 onClick={() => navigate('/tweaks')}
-                className="bg-purple-600/70 hover:bg-purple-600 rounded-lg px-3 py-2 transition-all text-xs font-medium"
-                title="Tweaks"
+                className={`bg-purple-600/70 hover:bg-purple-600 rounded-lg px-3 py-2 transition-all text-xs font-medium relative group ${
+                  activeKey === 'up' ? 'ring-2 ring-yellow-400 scale-95' : ''
+                }`}
+                title="Tweaks (↑)"
               >
+                <span className="absolute -top-2 -right-2 text-[10px] opacity-70 group-hover:opacity-100">↑</span>
                 Tweaks
               </button>
               <div />
               
               <button 
                 onClick={() => handleNavigation('back')}
-                className="bg-cyan-900/50 hover:bg-cyan-800 rounded-lg p-3 transition-all"
-                title="Back"
+                className={`bg-cyan-900/50 hover:bg-cyan-800 rounded-lg p-3 transition-all relative group ${
+                  activeKey === 'left' ? 'ring-2 ring-yellow-400 scale-95' : ''
+                }`}
+                title="Back (←)"
               >
+                <span className="absolute -top-2 -left-2 text-[10px] opacity-70 group-hover:opacity-100">←</span>
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
@@ -81,9 +124,12 @@ export default function NavigationController() {
               </button>
               <button 
                 onClick={() => handleNavigation('forward')}
-                className="bg-cyan-900/50 hover:bg-cyan-800 rounded-lg p-3 transition-all"
-                title="Forward"
+                className={`bg-cyan-900/50 hover:bg-cyan-800 rounded-lg p-3 transition-all relative group ${
+                  activeKey === 'right' ? 'ring-2 ring-yellow-400 scale-95' : ''
+                }`}
+                title="Forward (→)"
               >
+                <span className="absolute -top-2 -right-2 text-[10px] opacity-70 group-hover:opacity-100">→</span>
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
@@ -92,9 +138,12 @@ export default function NavigationController() {
               <div />
               <button 
                 onClick={() => navigate('/export/latest')}
-                className="bg-cyan-900/50 hover:bg-cyan-800 rounded-lg p-3 transition-all"
-                title="Export"
+                className={`bg-cyan-900/50 hover:bg-cyan-800 rounded-lg p-3 transition-all relative group ${
+                  activeKey === 'down' ? 'ring-2 ring-yellow-400 scale-95' : ''
+                }`}
+                title="Export (↓)"
               >
+                <span className="absolute -bottom-2 -right-2 text-[10px] opacity-70 group-hover:opacity-100">↓</span>
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
