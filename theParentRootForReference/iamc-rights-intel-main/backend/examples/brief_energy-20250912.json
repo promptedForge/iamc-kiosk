@@ -1,0 +1,25 @@
+{
+  "id": "energy-20250912",
+  "title": "Energy Committee Signals Upcoming Draft",
+  "summary": "Signals suggested phased compliance and potential pilot funding.",
+  "risks": [
+    "Premature member action based on speculation",
+    "Media confusion"
+  ],
+  "opportunities": [
+    "Early engagement list-building",
+    "Draft ask-me-anything planning"
+  ],
+  "recommendations": [
+    "Hold comms until draft appears",
+    "Quietly prep pilot candidates",
+    "Draft neutral explainer skeleton"
+  ],
+  "evidence": [
+    {
+      "source": "Committee Notes",
+      "url": "https://example.gov/notes",
+      "confidence": 0.6
+    }
+  ]
+}

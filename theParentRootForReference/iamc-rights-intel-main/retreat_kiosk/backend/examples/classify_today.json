@@ -1,0 +1,50 @@
+[
+  {
+    "id": "energy-20250919",
+    "title": "New Energy Regulation Draft Released",
+    "quadrant": "Policy",
+    "score": 0.92
+  },
+  {
+    "id": "labor-20250919",
+    "title": "Labor Coalition Announces Nationwide Actions",
+    "quadrant": "Advocacy",
+    "score": 0.81
+  },
+  {
+    "id": "market-20250919",
+    "title": "Industry Consolidation Rumors Surface",
+    "quadrant": "Industry",
+    "score": 0.76
+  },
+  {
+    "id": "safety-20250919",
+    "title": "Facility Safety Incident Trends Rise",
+    "quadrant": "Risk",
+    "score": 0.71
+  },
+  {
+    "id": "healthcare-20250919",
+    "title": "Healthcare Cost Transparency Bill Gains Traction",
+    "quadrant": "Policy",
+    "score": 0.84
+  },
+  {
+    "id": "zoning-20250919",
+    "title": "City Zoning Proposal Targets Industrial Corridors",
+    "quadrant": "Risk",
+    "score": 0.78
+  },
+  {
+    "id": "supply-20250919",
+    "title": "Supplier Consolidation Impacts Regional Pricing",
+    "quadrant": "Industry",
+    "score": 0.73
+  },
+  {
+    "id": "cyber-20250919",
+    "title": "Coordinated Phishing Attempts at Member Orgs",
+    "quadrant": "Advocacy",
+    "score": 0.77
+  }
+]

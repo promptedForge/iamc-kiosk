@@ -1,0 +1,27 @@
+{
+  "id": "cyber-20250919",
+  "title": "Phishing Campaigns: Coordinated Attempts at Member Orgs",
+  "summary": "Elevated phishing activity detected across multiple members; consistent lures suggest a coordinated actor.",
+  "risks": [
+    "Credential compromise risk",
+    "Operational downtime",
+    "Member trust erosion"
+  ],
+  "opportunities": [
+    "Rapid comms + training refresh",
+    "Deploy phishing simulations",
+    "Coordinate with ISAC"
+  ],
+  "recommendations": [
+    "Publish immediate alert & tips",
+    "Offer 30-min training deck",
+    "Share indicators of compromise (IOCs)"
+  ],
+  "evidence": [
+    {
+      "source": "Member SOC Reports",
+      "url": "https://soc.example.org/advisory-0925",
+      "confidence": 0.81
+    }
+  ]
+}

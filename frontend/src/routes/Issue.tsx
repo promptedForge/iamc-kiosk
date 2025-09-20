@@ -1,9 +1,11 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useIsMobile, responsiveText, responsivePadding, responsiveGap } from '../utils/responsive'
+import { getLLMService, initializeLLMService } from '../services/llm'
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8787'
+const REQUESTY_API_KEY = import.meta.env.VITE_REQUESTY_API_KEY || 'sk-MbEMvUXwQpuHBM++j4KOh6Uyc1uLOdNvyAKAE1RFNq036e/fUVp9GGi16gcKUTo6An8oJ5BRh1rFbctkP4iCy/Y5tDPIWWuvhrXEyXfFvgk='
 
 interface Hypothesis {
   id: string
@@ -87,6 +89,21 @@ export default function Issue(){
   const [showHypotheses, setShowHypotheses] = useState(true)
   const [exportFormat, setExportFormat] = useState<'zip' | 'pdf' | 'csv' | 'json'>('zip')
   const [isExporting, setIsExporting] = useState(false)
+  const [selectedModel, setSelectedModel] = useState<string>('anthropic/claude-sonnet-4-20250514-1m')
+  
+  // Initialize LLM service and fetch config
+  useEffect(() => {
+    initializeLLMService(REQUESTY_API_KEY)
+    // Fetch config to get selected model
+    fetch(`${API}/config`)
+      .then(r => r.json())
+      .then(cfg => {
+        if (cfg.selected_model) {
+          setSelectedModel(cfg.selected_model)
+        }
+      })
+      .catch(console.error)
+  }, [])
   
   if (isLoading) return <div className="grid place-items-center h-screen">Loading…</div>
   
@@ -103,15 +120,66 @@ export default function Issue(){
 
   async function genAssets(){
     setIsGenerating(true)
-    // Simulated response since AI is offline
-    setTimeout(() => {
+    
+    try {
+      const llm = getLLMService()
+      const model = selectedModel || 'anthropic/claude-sonnet-4-20250514-1m'
+      
+      const prompt = `Generate professional communication assets for the following intelligence brief:
+
+Title: ${brief.title}
+Summary: ${editableContent.summary || brief.summary}
+Risks: ${(editableContent.risks || brief.risks).join(', ')}
+Opportunities: ${(editableContent.opportunities || brief.opportunities).join(', ')}
+Recommendations: ${(editableContent.recommendations || brief.recommendations).join(', ')}
+Audience: ${audience}
+Lens: ${lens.toUpperCase()}
+
+Generate:
+1. LinkedIn post (professional, concise, with relevant hashtags)
+2. Email paragraph for internal team (action-oriented, specific next steps)
+3. Press excerpt (neutral tone, factual)
+
+Format as JSON with keys: linkedin, email_paragraph, press_excerpt`
+
+      const response = await llm.createChatCompletion({
+        model,
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a strategic communications expert for a human rights intelligence organization. Generate clear, actionable content.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 1024
+      })
+      
+      try {
+        const generatedAssets = JSON.parse(response.choices[0].message.content)
+        setAssets(generatedAssets)
+      } catch (parseError) {
+        // Fallback if JSON parsing fails
+        setAssets({
+          linkedin: `${brief.title}\n\nKey insights:\n• ${editableContent.risks?.[0] || brief.risks[0]}\n• ${editableContent.opportunities?.[0] || brief.opportunities[0]}\n\n#HumanRights #IntelligenceBrief`,
+          email_paragraph: `Team,\n\nRegarding ${brief.title}: ${editableContent.summary || brief.summary}\n\nRecommended actions: ${editableContent[`actions_${lens}`]?.[0] || lensBrief?.actions[0] || 'Monitor situation'}`,
+          press_excerpt: `${brief.title}. ${editableContent.summary || brief.summary}`
+        })
+      }
+    } catch (error) {
+      console.error('Error generating assets:', error)
+      // Fallback to template
       setAssets({
         linkedin: `${brief.title}\n\nKey insights:\n• ${editableContent.risks?.[0] || brief.risks[0]}\n• ${editableContent.opportunities?.[0] || brief.opportunities[0]}\n\n#HumanRights #IntelligenceBrief`,
         email_paragraph: `Team,\n\nThe draft introduces phased compliance that raises near-term uncertainty but opens avenues for pilot program funding.\n\nRecommended actions today: ${editableContent[`actions_${lens}`]?.[0] || lensBrief?.actions[0] || 'Publish neutral explainer within 2 hours'}`,
         press_excerpt: `${brief.title}. Immediate implications: ${editableContent.summary || brief.summary}`
       })
+    } finally {
       setIsGenerating(false)
-    }, 1000)
+    }
   }
 
   const updateContent = (field: string, value: any, index?: number) => {
@@ -291,24 +359,24 @@ export default function Issue(){
                         </div>
                       </div>
                       
-                      <div className={`flex ${isMobile ? 'flex-wrap' : 'gap-2 ml-4'} gap-2`}>
+                      <div className={`flex ${isMobile ? 'flex-col w-full mt-2' : 'gap-2 ml-4'} gap-2`}>
                         <button 
                           onClick={() => handleHypothesisAction(hyp.id, 'pin')}
-                          className="btn btn-sm bg-cyan-600 hover:bg-cyan-700"
+                          className={`btn ${isMobile ? 'w-full justify-center' : 'btn-sm'} bg-cyan-600 hover:bg-cyan-700`}
                           title="Pin for monitoring"
                         >
                           📌 Pin
                         </button>
                         <button 
                           onClick={() => handleHypothesisAction(hyp.id, 'investigate')}
-                          className="btn btn-sm bg-purple-600 hover:bg-purple-700"
+                          className={`btn ${isMobile ? 'w-full justify-center' : 'btn-sm'} bg-purple-600 hover:bg-purple-700`}
                           title="Mark for investigation"
                         >
                           🔍 Investigate
                         </button>
                         <button 
                           onClick={() => handleHypothesisAction(hyp.id, 'reject')}
-                          className="btn btn-sm opacity-60 hover:opacity-100"
+                          className={`btn ${isMobile ? 'w-full justify-center' : 'btn-sm'} opacity-60 hover:opacity-100`}
                           title="Reject hypothesis"
                         >
                           ✕
@@ -375,13 +443,32 @@ export default function Issue(){
           <div className="flex items-center justify-between mb-3">
             <div className="font-semibold">Assets</div>
             <div className="flex items-center gap-2">
-              <span className="text-xs opacity-60">⚠️ AI currently offline - using templates</span>
+              {selectedModel ? (
+                <span className="text-xs opacity-60 text-cyan-400">Using: {selectedModel.split('/').pop()}</span>
+              ) : (
+                <span className="text-xs opacity-60 text-yellow-400">No model selected</span>
+              )}
               <button 
-                className="btn relative" 
+                className="btn relative bg-cyan-600 hover:bg-cyan-700" 
                 onClick={genAssets}
                 disabled={isGenerating}
               >
-                {isGenerating ? 'Generating...' : 'Generate'}
+                {isGenerating ? (
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Generating...
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    Generate
+                  </span>
+                )}
               </button>
             </div>
           </div>
@@ -413,9 +500,12 @@ export default function Issue(){
               </div>
             </div>
           )}
-          <div className="mt-4 text-xs opacity-50">
-            Note: Local AI models and API integration planned for future release. Currently using template-based generation.
-          </div>
+          {!selectedModel && (
+            <div className="mt-4 text-xs opacity-60 bg-yellow-900/20 border border-yellow-600/30 rounded-lg p-3 flex items-start gap-2">
+              <span className="text-yellow-400">💡</span>
+              <span>Select an AI model in the Command Palette (⌘K) to enable intelligent asset generation</span>
+            </div>
+          )}
         </div>
 
         {/* Export Gate Section */}
@@ -521,24 +611,24 @@ function EditableCard({ title, items, onUpdate }: { title: string, items: string
   }
 
   return (
-    <div className="card p-4">
-      <div className="font-semibold mb-2 flex justify-between items-center">
-        {title}
-        <button onClick={addItem} className="text-xs opacity-60 hover:opacity-100">+ Add</button>
+    <div className="bg-[#11253c]/50 rounded-xl p-5 backdrop-blur-sm">
+      <div className="font-semibold mb-3 flex justify-between items-center">
+        <span className="text-cyan-100">{title}</span>
+        <button onClick={addItem} className="text-xs opacity-60 hover:opacity-100 hover:text-cyan-300 transition-colors">+ Add</button>
       </div>
-      <div className="space-y-2">
+      <div className="space-y-3">
         {items.map((x, i) => (
           <div key={i} className="group flex items-start gap-2">
-            <span className="opacity-60 text-xs mt-1">•</span>
+            <span className="opacity-60 text-xs mt-2 text-cyan-400">•</span>
             <textarea
-              className="flex-1 bg-transparent resize-none text-sm opacity-90 focus:bg-[#11253c] rounded p-1 -ml-1"
+              className="flex-1 bg-[#0a1929]/60 border border-cyan-900/20 resize-none text-sm opacity-90 focus:bg-[#0a1929] focus:border-cyan-400/50 rounded-lg p-3 transition-all"
               value={x}
               onChange={(e) => updateItem(i, e.target.value)}
               rows={2}
             />
             <button 
               onClick={() => removeItem(i)}
-              className="opacity-0 group-hover:opacity-60 hover:opacity-100 text-xs text-red-400"
+              className="opacity-0 group-hover:opacity-60 hover:opacity-100 text-xs text-red-400 mt-2"
             >
               ✕
             </button>

@@ -1,0 +1,32 @@
+{
+  "id": "zoning-20250919",
+  "title": "Zoning Proposal: Industrial Corridor Constraints",
+  "summary": "Draft language could restrict expansion in designated corridors; comment period is open and influenceable.",
+  "risks": [
+    "Reduced flexibility for member expansions",
+    "Potential relocation costs",
+    "Permit delays"
+  ],
+  "opportunities": [
+    "Shape language via targeted comments",
+    "Highlight economic impact to city council",
+    "Propose carve-outs for essential services"
+  ],
+  "recommendations": [
+    "Publish template comments for members",
+    "Coordinate a council briefing",
+    "Map at-risk sites and mitigation options"
+  ],
+  "evidence": [
+    {
+      "source": "City Planning Board",
+      "url": "https://city.example.gov/zoning2025",
+      "confidence": 0.79
+    },
+    {
+      "source": "Local Coverage",
+      "url": "https://local.example.com/zoning-proposal",
+      "confidence": 0.68
+    }
+  ]
+}

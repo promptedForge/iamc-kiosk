@@ -1,0 +1,57 @@
+openapi: 3.0.3
+info: { title: IAMC Executive Sidecar API, version: 0.2.0 }
+servers: [ { url: http://localhost:8787 } ]
+paths:
+  /ingest/status: { get: { summary: Ingest status, responses: { '200': { description: OK } } } }
+  /classify/today: { get: { summary: Today classification, responses: { '200': { description: OK } } } }
+  /brief/{id}:
+    get:
+      summary: Brief or lens brief
+      parameters:
+        - in: path   ; name: id   ; required: true ; schema: { type: string }
+        - in: query  ; name: lens ; required: false ; schema: { type: string, enum: [ceo,coo,director] }
+      responses: { '200': { description: OK } }
+  /assets/generate:
+    post:
+      summary: Generate assets from brief (with audience tone)
+      requestBody:
+        required: true
+        content: { application/json: { schema: { type: object, properties: { brief: { $ref: '#/components/schemas/Brief' }, audience: { type: string } } } } }
+      responses: { '200': { description: OK } }
+  /roi/today: { get: { summary: ROI for today, responses: { '200': { description: OK } } } }
+  /export/{id}:
+    post:
+      summary: Export ZIP (gated by human review & dual signoff)
+      parameters: [ { in: path, name: id, required: true, schema: { type: string } } ]
+      responses: { '200': { description: ZIP file }, '403': { description: Forbidden }, '409': { description: Conflict } }
+  /config:
+    get: { summary: Get UI cadence & audience config, responses: { '200': { description: OK } } }
+    post:
+      summary: Update UI cadence & audience config
+      requestBody: { required: true, content: { application/json: { schema: { type: object } } } }
+      responses: { '200': { description: OK } }
+  /review/status: { get: { summary: Review status, responses: { '200': { description: OK } } } }
+  /review/interrupt: { post: { summary: Activate human interrupt, responses: { '200': { description: OK } } } }
+  /review/resume: { post: { summary: Resume (clear interrupt), responses: { '200': { description: OK } } } }
+  /review/signoff:
+    post:
+      summary: Sign off a role
+      requestBody: { required: true, content: { application/json: { schema: { type: object, properties: { role: {type:string}, approve: {type:boolean} } } } } }
+      responses: { '200': { description: OK } }
+  /learn/samples: { get: { summary: List uploaded prior reports, responses: { '200': { description: OK } } } }
+  /learn/upload:
+    post:
+      summary: Upload a previous report (base64)
+      requestBody: { required: true, content: { application/json: { schema: { type: object, properties: { filename: {type:string}, content_base64: {type:string} } } } } }
+      responses: { '200': { description: OK } }
+components:
+  schemas:
+    Evidence: { type: object, properties: { source: { type: string }, url: { type: string }, confidence: { type: number } } }
+    Brief:
+      type: object
+      properties:
+        id: { type: string } ; title: { type: string } ; summary: { type: string }
+        risks: { type: array, items: { type: string } }
+        opportunities: { type: array, items: { type: string } }
+        recommendations: { type: array, items: { type: string } }
+        evidence: { type: array, items: { $ref: '#/components/schemas/Evidence' } }
