@@ -220,8 +220,8 @@ export default function DemoWalkthrough() {
 
   return (
     <>
-      {/* Demo trigger button */}
-      {!isRunning && location.pathname === '/' && (
+      {/* Demo trigger button - TODO: Re-enable when MCP functionality is working */}
+      {/* {!isRunning && location.pathname === '/' && (
         <button
           onClick={startDemo}
           className="fixed top-6 right-6 z-50 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white px-6 py-3 rounded-lg font-medium shadow-lg transition-all hover:scale-105 active:scale-95"
@@ -234,7 +234,7 @@ export default function DemoWalkthrough() {
             Loop Demo
           </span>
         </button>
-      )}
+      )} */}
 
       {/* Demo overlay */}
       {isRunning && (

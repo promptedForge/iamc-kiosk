@@ -58,6 +58,7 @@ export default function App(){
         >
           ⌘K
         </button>
+        {/* TODO: Add MCP integration button here when functionality is restored */}
       </div>
     </div>
   )
