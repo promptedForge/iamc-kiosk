@@ -1,0 +1,15 @@
+{
+  "type":"object",
+  "required":["human_interrupt_active","signoff"],
+  "properties":{
+    "human_interrupt_active":{"type":"boolean"},
+    "signoff":{
+      "type":"object",
+      "properties":{
+        "Media Team":{"type":"boolean"},
+        "Strategy Head":{"type":"boolean"}
+      },
+      "additionalProperties":false
+    }
+  }
+}

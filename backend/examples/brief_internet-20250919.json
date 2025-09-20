@@ -1,0 +1,29 @@
+{
+  "id": "internet-20250919",
+  "title": "Targeted Internet Shutdowns: Protest-Day Patterns & Rights Guidance",
+  "summary": "Data indicates shutdowns correlating with planned protest schedules. Rights-preserving guidance and safety messaging required.",
+  "risks": [
+    "Communication blackouts impair emergency coordination",
+    "Amplified misinformation during outages",
+    "Chilling effect on assembly & speech"
+  ],
+  "opportunities": [
+    "Issue preparedness checklist for chapters",
+    "Pre-position SMS/IVR info for outage windows",
+    "Document shutdowns for advocacy/legal briefs"
+  ],
+  "recommendations": [
+    "Release preparedness checklist within 24 hours",
+    "Coordinate alternative comms with partner orgs",
+    "Publish weekly log of outages with legal framing"
+  ],
+  "evidence": [
+    {
+      "source": "SFLC.in – Internet Shutdown Tracker",
+      "url": "https://internetshutdowns.in/",
+      "confidence": 0.9
+    }
+  ],
+  "geo": ["IN-MH", "IN-HR"],
+  "topic": ["internet_shutdowns", "assembly"]
+}

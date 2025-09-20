@@ -26,6 +26,35 @@
   scrollbar-color: rgba(34, 211, 238, 0.3) rgba(0, 0, 0, 0.2);
 }
 
+/* Kiosk mode optimizations */
+@media (min-width: 1920px) {
+  .kiosk-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem;
+  }
+  
+  .kiosk-text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+  
+  .kiosk-padding-lg {
+    padding: 2rem;
+  }
+}
+
+/* Touch-friendly styles for kiosk */
+@media (pointer: coarse) {
+  .btn {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  .clickable-card {
+    min-height: 60px;
+  }
+}
+
 /* Smooth animations */
 @keyframes fadeIn {
   from {

@@ -4,7 +4,7 @@ use clap::Parser;
 use engine::{Config, IngestStatus, Issue, Brief, LensBrief, Assets, Roi, UiConfig, RuntimeState, load_ui_config, save_ui_config, load_runtime, save_runtime, list_learn_samples, save_learn_sample};
 use std::{net::SocketAddr, sync::Arc};
 use tower_http::cors::{CorsLayer, Any};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use tracing::{info, error};
 use anyhow::Result;
 use base64::Engine;
@@ -29,6 +29,7 @@ struct Args {
 #[derive(Deserialize)] struct SignoffBody { role: String, approve: bool }
 #[derive(Deserialize)] struct UploadBody { filename: String, content_base64: String }
 #[derive(Deserialize)] struct GenerateReq { brief: engine::Brief, audience: Option<String> }
+#[derive(Deserialize)] struct HypothesisAction { action: String }
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -52,6 +53,8 @@ async fn main() -> Result<()> {
         .route("/review/signoff", post(review_signoff))
         .route("/learn/samples", get(learn_samples))
         .route("/learn/upload", post(learn_upload))
+        .route("/hypotheses/:id", get(get_hypotheses))
+        .route("/hypotheses/:id/:hid/action", post(post_hypothesis_action))
         .with_state(state)
         .layer(cors);
 
@@ -183,10 +186,10 @@ async fn export_zip(State(st): State<AppState>, Path(id): Path<String>) -> Resul
         return Err((StatusCode::CONFLICT, "Export blocked: Human interrupt active".into()));
     }
     if cfg_ui.require_dual_signoff {
-        let a = rstate.signoff.get("Analyst").copied().unwrap_or(false);
+        let a = rstate.signoff.get("Media Team").copied().unwrap_or(false);
         let s = rstate.signoff.get("Strategy Head").copied().unwrap_or(false);
         if !(a && s) {
-            return Err((StatusCode::FORBIDDEN, "Export blocked: Dual signoff required".into()));
+            return Err((StatusCode::FORBIDDEN, "Export blocked: Dual signoff required (Media Team and Strategy Head)".into()));
         }
     }
     use std::io::Read;
@@ -240,4 +243,78 @@ async fn learn_upload(State(st): State<AppState>, Json(b): Json<UploadBody>) -> 
 
 fn err500<E: std::fmt::Display>(e: E) -> (StatusCode, String) {
     error!("error: {}", e); (StatusCode::INTERNAL_SERVER_ERROR, format!("{}", e))
+}
+
+async fn get_hypotheses(State(st): State<AppState>, Path(id): Path<String>) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
+    if st.cfg.mock {
+        // Load from examples/hypotheses_<id>.json
+        let filepath = format!("{}/hypotheses_{}.json", st.cfg.examples_dir, id);
+        match tokio::fs::read_to_string(&filepath).await {
+            Ok(content) => {
+                match serde_json::from_str(&content) {
+                    Ok(json) => Ok(Json(json)),
+                    Err(e) => {
+                        error!("Failed to parse hypotheses file {}: {}", filepath, e);
+                        Err((StatusCode::INTERNAL_SERVER_ERROR, format!("Invalid JSON: {}", e)))
+                    }
+                }
+            }
+            Err(e) => {
+                info!("No hypotheses file found for {}: {}", id, e);
+                // Return empty array if file doesn't exist
+                Ok(Json(serde_json::json!([])))
+            }
+        }
+    } else {
+        // TODO: Implement real hypothesis generation
+        Ok(Json(serde_json::json!([])))
+    }
+}
+
+async fn post_hypothesis_action(
+    State(st): State<AppState>, 
+    Path((id, hid)): Path<(String, String)>, 
+    Json(body): Json<HypothesisAction>
+) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
+    info!("Hypothesis action: id={}, hid={}, action={}", id, hid, body.action);
+    
+    if st.cfg.mock {
+        // Log to a file for demo purposes
+        let log_entry = format!("{},{},{},{}\n", 
+            chrono::Utc::now().to_rfc3339(), 
+            id, 
+            hid, 
+            body.action
+        );
+        let log_path = format!("{}/hypothesis_actions.log", st.cfg.examples_dir);
+        
+        match tokio::fs::OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(&log_path)
+            .await
+        {
+            Ok(mut file) => {
+                use tokio::io::AsyncWriteExt;
+                let _ = file.write_all(log_entry.as_bytes()).await;
+            }
+            Err(e) => {
+                error!("Failed to write action log: {}", e);
+            }
+        }
+        
+        // Return success response
+        Ok(Json(serde_json::json!({
+            "status": "ok",
+            "action": body.action,
+            "hypothesis_id": hid,
+            "event_id": id
+        })))
+    } else {
+        // TODO: Implement real hypothesis action handling
+        Ok(Json(serde_json::json!({
+            "status": "ok",
+            "action": body.action
+        })))
+    }
 }

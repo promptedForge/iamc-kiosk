@@ -1,0 +1,9 @@
+{
+  "signoff_roles": ["Media Team", "Strategy Head"],
+  "operational_roles": ["Data Scientist"],
+  "ui_role_aliases": {
+    "Analyst": "Media Team",
+    "analyst": "Media Team",
+    "mt": "Media Team"
+  }
+}

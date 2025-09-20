@@ -136,12 +136,12 @@ export default function Radar(){
       </div>
 
       {/* Cockpit-style Analyzed Patterns Grid */}
-      <div className="px-6 md:px-16 pb-32">
+      <div className="px-6 md:px-16 pb-32 kiosk-padding-lg">
         <div className="mb-6">
-          <h2 className="text-xl font-semibold opacity-90">Analyzed Patterns & Trends</h2>
+          <h2 className="text-xl font-semibold opacity-90 kiosk-text-lg">Analyzed Patterns & Trends</h2>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 perspective-1000">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 perspective-1000 kiosk-grid">
           {(['Policy','Industry','Advocacy','Risk'] as const).map((q, qIdx) => {
             const isLeft = qIdx % 2 === 0
             const isTop = qIdx < 2
@@ -182,7 +182,7 @@ export default function Radar(){
                               className="relative"
                             >
                               <div 
-                                className="p-4 bg-[#11253c]/80 rounded-lg hover:bg-[#132a44] cursor-pointer transition-all hover:scale-[1.01]"
+                                className="p-4 bg-[#11253c]/80 rounded-lg hover:bg-[#132a44] cursor-pointer transition-all hover:scale-[1.01] clickable-card"
                                 onClick={()=> nav(`/issue/${it.id}`)}
                               >
                                 <div className="flex justify-between items-start mb-2">
@@ -195,7 +195,15 @@ export default function Radar(){
                                   <div className="text-xs opacity-60 italic mb-2">↗ {it.trend}</div>
                                 )}
                                 <div className="flex justify-between items-center">
-                                  <div className="text-xs opacity-70">Confidence: {Math.round(it.score*100)}%</div>
+                                  <div className="flex items-center gap-3">
+                                    <div className="text-xs opacity-70">Confidence: {Math.round(it.score*100)}%</div>
+                                    {/* Show hypothesis indicator for specific high-priority items */}
+                                    {(it.priority === 'critical' || it.priority === 'high') && it.id === 'farmers-20250919' && (
+                                      <div className="text-xs bg-purple-600/20 text-purple-400 px-2 py-0.5 rounded-full animate-pulse">
+                                        2 candidate hypotheses →
+                                      </div>
+                                    )}
+                                  </div>
                                   <div className="flex items-center gap-2">
                                     {it.visibility && it.visibility.length === 1 && (
                                       <div className="text-xs opacity-50">

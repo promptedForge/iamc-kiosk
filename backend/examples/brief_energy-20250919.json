@@ -1,32 +1,34 @@
 {
   "id": "energy-20250919",
-  "title": "Energy Regulation Draft: Immediate Implications",
-  "summary": "The draft introduces phased compliance that raises near-term uncertainty but opens avenues for pilot program funding.",
+  "title": "Power Tariff Reform Draft: Near-term Impacts & RPO Alignment",
+  "summary": "Draft tariff rationalization with stronger Renewable Purchase Obligations (RPO) introduces near-term compliance uncertainty for state DISCOMs and industrial users while accelerating renewable portfolios.",
   "risks": [
-    "Short-term compliance ambiguity for members",
-    "Potential press mischaracterization of IAMC stance",
-    "Operational retooling for mid-size facilities"
+    "Short-term tariff volatility for MSMEs in select states",
+    "Narrative risk if IAMC appears to oppose transition",
+    "Operational retooling for captive/embedded generation users"
   ],
   "opportunities": [
-    "Leverage pilot programs to shape final language",
-    "Position IAMC as a standards partner",
-    "Strengthen member onboarding to new reporting tools"
+    "Position IAMC as a neutral standards partner on energy affordability",
+    "Engage consumer advocacy on predictable billing windows",
+    "Amplify equitable transition framing for vulnerable workers"
   ],
   "recommendations": [
     "Publish neutral explainer within 2 hours",
-    "Schedule coalition roundtable within 48 hours",
-    "Identify 3 pilot candidates for early engagement"
+    "Convene roundtable with consumer groups & energy lawyers (48 hours)",
+    "Collect MSME case studies (7 days) to inform position"
   ],
   "evidence": [
     {
-      "source": "Federal Register (Draft)",
-      "url": "https://example.gov/energy/draft",
+      "source": "CEA/Ministry of Power (Draft)",
+      "url": "https://powermin.gov.in/",
       "confidence": 0.86
     },
     {
-      "source": "Major Outlet Coverage",
-      "url": "https://news.example.com/energy-draft",
+      "source": "The Hindu – Policy Coverage",
+      "url": "https://www.thehindu.com/",
       "confidence": 0.74
     }
-  ]
+  ],
+  "geo": ["IN"],
+  "topic": ["energy", "tariffs", "RPO"]
 }
