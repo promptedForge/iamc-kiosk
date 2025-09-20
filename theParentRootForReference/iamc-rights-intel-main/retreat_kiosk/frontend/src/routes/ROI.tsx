@@ -1,0 +1,17 @@
+import { useQuery } from '@tanstack/react-query'
+import { getRoiToday } from '../lib_api'
+
+export default function ROI(){
+  const { data } = useQuery({ queryKey: ['roi'], queryFn: getRoiToday })
+  if(!data) return <div className="grid place-items-center h-screen">Loading…</div>
+  return (
+    <div className="grid place-items-center h-screen">
+      <div className="text-center space-y-4">
+        <div className="text-4xl font-extrabold">Impact Today</div>
+        <div className="text-6xl font-black">{data.hours_saved.toFixed(1)} hours saved</div>
+        <div className="opacity-80">≈ {data.fte_equiv.toFixed(2)} FTE</div>
+        <div className="opacity-80">Manual: {data.before_hours.toFixed(1)} hrs → Automated: {(data.after_minutes/60).toFixed(1)} hrs</div>
+      </div>
+    </div>
+  )
+}

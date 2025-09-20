@@ -5,6 +5,7 @@ import Palette from '../components/Palette'
 import NavigationController from '../components/NavigationController'
 import DemoWalkthrough from '../components/DemoWalkthrough'
 import { useStore } from '../store'
+import { useIsMobile } from '../utils/responsive'
 
 export default function App(){
   const nav = useNavigate()
@@ -92,12 +93,7 @@ export default function App(){
         // In kiosk mode, Escape goes back instead of exiting fullscreen
         nav(-1)
       }
-      // Number keys for quick navigation
-      if(e.key >= '1' && e.key <= '9' && !e.ctrlKey && !e.metaKey){
-        const routes = ['/', '/radar', '/issue', '/export', '/tweaks', '/config', '/roi']
-        const index = parseInt(e.key) - 1
-        if(routes[index]) nav(routes[index])
-      }
+      // Remove number key navigation - handled by arrow keys in NavigationController
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -106,6 +102,8 @@ export default function App(){
   return (
     <div className="min-h-screen">
       <ReviewBar />
+      {/* Spacer div to account for fixed ReviewBar height */}
+      <div className="h-16 md:h-14" />
       <Palette />
       <NavigationController />
       <DemoWalkthrough />
@@ -170,18 +168,6 @@ export default function App(){
         </button>
       </div>
       
-      {/* Keyboard shortcuts help */}
-      {isKioskMode && (
-        <div className="fixed bottom-4 right-4 bg-black/80 p-3 rounded-lg text-xs opacity-40 hover:opacity-80 transition-opacity z-20">
-          <div className="font-semibold mb-1">Shortcuts:</div>
-          <div className="space-y-0.5">
-            <div>1-9: Quick navigation</div>
-            <div>R: Reset session</div>
-            <div>F: Exit kiosk mode</div>
-            <div>ESC: Go back</div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

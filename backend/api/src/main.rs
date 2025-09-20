@@ -74,14 +74,66 @@ async fn brief(State(st): State<AppState>, Path(id): Path<String>, Query(q): Que
     // Mock data for demo
     if st.cfg.mock {
         if let Some(lens) = q.lens {
-            // Mock lens brief
-            let mock_lens_brief = serde_json::json!({
-                "actions": match lens.as_str() {
-                    "ceo" => vec![
-                        "Schedule executive briefing within 2 hours",
-                        "Prepare media statement for board approval",
-                        "Initiate stakeholder communications protocol"
-                    ],
+            // Mock lens brief - check for violence scenario
+            let mock_lens_brief = if id == "violence-20250919" {
+                serde_json::json!({
+                    "actions": match lens.as_str() {
+                        "ceo" => vec![
+                            "Convene emergency board meeting within 1 hour",
+                            "Authorize immediate deployment of crisis response funds",
+                            "Direct communication with state Chief Secretary",
+                            "Prepare statement for international partners",
+                            "Activate security protocols for field teams"
+                        ],
+                        "coo" => vec![
+                            "Activate 24/7 crisis monitoring center immediately",
+                            "Deploy rapid response legal teams to affected areas",
+                            "Coordinate with field offices for real-time updates",
+                            "Ensure safety protocols for all field personnel",
+                            "Prepare emergency fund disbursement procedures"
+                        ],
+                        "director" => vec![
+                            "Brief all department heads on crisis protocols",
+                            "Mobilize documentation teams for evidence collection",
+                            "Coordinate with legal department for PIL preparation",
+                            "Establish communication channels with local NGOs",
+                            "Monitor social media for violence escalation patterns"
+                        ],
+                        _ => vec!["Emergency response required", "Monitor and document", "Ensure team safety"]
+                    },
+                    "talking_points": match lens.as_str() {
+                        "ceo" => vec![
+                            "We have confirmed reports of escalating violence requiring immediate intervention",
+                            "Our field teams are coordinating with local authorities and NGO partners",
+                            "This situation demands our highest level of response and resources",
+                            "We are documenting all incidents for accountability and justice mechanisms",
+                            "The safety of affected communities is our absolute priority"
+                        ],
+                        "coo" => vec![
+                            "All field teams must prioritize personal safety while documenting incidents",
+                            "We are coordinating with partner NGOs for immediate victim support",
+                            "Legal aid network is on standby for affected families",
+                            "Documentation protocols must be followed for future accountability",
+                            "Regular check-ins every 2 hours from field teams are mandatory"
+                        ],
+                        "director" => vec![
+                            "Immediate activation of crisis response protocols",
+                            "Coordinating with ground teams for real-time updates",
+                            "Evidence documentation is critical for legal action",
+                            "Maintaining secure communication channels",
+                            "Preparing comprehensive situation reports"
+                        ],
+                        _ => vec!["Crisis response active", "Safety is priority", "Documentation ongoing"]
+                    }
+                })
+            } else {
+                serde_json::json!({
+                    "actions": match lens.as_str() {
+                        "ceo" => vec![
+                            "Schedule executive briefing within 2 hours",
+                            "Prepare media statement for board approval",
+                            "Initiate stakeholder communications protocol"
+                        ],
                     "coo" => vec![
                         "Review operational impact assessment",
                         "Coordinate cross-functional response team",
@@ -112,7 +164,8 @@ async fn brief(State(st): State<AppState>, Path(id): Path<String>, Query(q): Que
                     ],
                     _ => vec!["Situation under review", "Updates forthcoming", "Coordinating response"]
                 }
-            });
+                })
+            };
             return Ok(Json(mock_lens_brief));
         } else {
             // Mock regular brief based on the ID
@@ -135,6 +188,41 @@ async fn brief(State(st): State<AppState>, Path(id): Path<String>, Query(q): Que
                         "Issue neutral statement supporting dialogue",
                         "Review agricultural supply chain dependencies",
                         "Prepare CSR initiative for affected regions"
+                    ]
+                }),
+                "violence-20250919" => serde_json::json!({
+                    "id": "violence-20250919",
+                    "title": "Lynching Crisis: Multiple Incidents Targeting Muslims in Rajasthan",
+                    "summary": "Coordinated lynch mob attacks targeting Muslim communities across 3 districts in western Rajasthan. WhatsApp-driven mobilization with hate speech preceding physical violence. Local law enforcement failing to prevent attacks. 12 lynching incidents documented in 48 hours with 7 fatalities. Immediate intervention required to prevent further killings.",
+                    "risks": vec![
+                        "Imminent risk of lynching attacks spreading to neighboring districts",
+                        "WhatsApp-coordinated lynch mobs targeting Muslim families",
+                        "Police failure to protect Muslim communities from mob violence",
+                        "International human rights organizations documenting systematic killings"
+                    ],
+                    "opportunities": vec![
+                        "Activate rapid response network with local NGOs",
+                        "Deploy fact-checking resources to counter misinformation",
+                        "Coordinate with state authorities for protective measures",
+                        "Document evidence for accountability mechanisms"
+                    ],
+                    "recommendations": vec![
+                        "Issue immediate safety advisory to at-risk communities",
+                        "Activate 24/7 crisis monitoring team",
+                        "Deploy legal aid network to affected areas",
+                        "Brief international partners within 2 hours"
+                    ],
+                    "evidence": vec![
+                        serde_json::json!({
+                            "source": "IAMC Field Reports",
+                            "url": "https://iamc.com/field-reports",
+                            "confidence": 0.92
+                        }),
+                        serde_json::json!({
+                            "source": "Local NGO Network",
+                            "url": "https://example.com/ngo-alerts",
+                            "confidence": 0.88
+                        })
                     ]
                 }),
                 _ => serde_json::json!({

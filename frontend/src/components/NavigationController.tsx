@@ -17,7 +17,7 @@ export default function NavigationController() {
       else if (path.startsWith('/radar')) {
         // Navigate to the first issue from mock data
         // Using a default ID that exists in our mock data
-        navigate('/issue/farmers-20250919')
+        navigate('/issue/violence-20250919')
       }
       else if (path.startsWith('/issue')) navigate('/roi')
       else if (path.startsWith('/roi')) navigate('/export/latest')
@@ -28,8 +28,8 @@ export default function NavigationController() {
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      // Toggle controller with Ctrl/Cmd+N
-      if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+      // Toggle controller with Option/Alt+Cmd+/
+      if ((e.metaKey || e.ctrlKey) && e.altKey && e.key === '/') {
         e.preventDefault()
         setIsOpen(!isOpen)
       }
@@ -178,7 +178,7 @@ export default function NavigationController() {
       className="fixed bottom-6 right-6 z-50 bg-spotlight backdrop-blur-lg rounded-full w-14 h-14 shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all border border-white/20"
     >
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
       </svg>
     </button>
   )

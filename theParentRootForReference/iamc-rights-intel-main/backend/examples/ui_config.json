@@ -1,0 +1,18 @@
+{
+  "cadence": "daily",
+  "time_of_day": "07:30",
+  "days_of_week": [
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri"
+  ],
+  "audiences": [
+    "CEO",
+    "COO",
+    "Director"
+  ],
+  "require_dual_signoff": true,
+  "autopublish": false
+}

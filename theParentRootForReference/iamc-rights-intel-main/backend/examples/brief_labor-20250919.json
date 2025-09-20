@@ -1,0 +1,32 @@
+{
+  "id": "labor-20250919",
+  "title": "Labor Coalition Actions: Operational Readiness",
+  "summary": "Coordinated actions may impact facility throughput and media narratives; early member advisory recommended.",
+  "risks": [
+    "Service disruptions at critical sites",
+    "Narrative drift toward politicization",
+    "Confusion over IAMC stance among members"
+  ],
+  "opportunities": [
+    "Proactive advisory positions IAMC as steady partner",
+    "Clarify neutral stance while emphasizing safety",
+    "Offer hotline for member incident reporting"
+  ],
+  "recommendations": [
+    "Issue advisory memo within 2 hours",
+    "Prepare Q&A for member services",
+    "Coordinate with local partners for incident visibility"
+  ],
+  "evidence": [
+    {
+      "source": "Union Press Brief",
+      "url": "https://example.com/union/brief",
+      "confidence": 0.78
+    },
+    {
+      "source": "Local Media",
+      "url": "https://local.example.com/labor",
+      "confidence": 0.63
+    }
+  ]
+}

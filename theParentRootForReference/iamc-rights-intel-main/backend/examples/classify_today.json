@@ -1,0 +1,26 @@
+[
+  {
+    "id": "energy-20250919",
+    "title": "New Energy Regulation Draft Released",
+    "quadrant": "Policy",
+    "score": 0.92
+  },
+  {
+    "id": "labor-20250919",
+    "title": "Labor Coalition Announces Nationwide Actions",
+    "quadrant": "Advocacy",
+    "score": 0.81
+  },
+  {
+    "id": "market-20250919",
+    "title": "Industry Consolidation Rumors Surface",
+    "quadrant": "Industry",
+    "score": 0.76
+  },
+  {
+    "id": "safety-20250919",
+    "title": "Facility Safety Incident Trends Rise",
+    "quadrant": "Risk",
+    "score": 0.71
+  }
+]

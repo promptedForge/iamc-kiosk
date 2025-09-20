@@ -1,15 +1,32 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
+import { getLLMService, initializeLLMService, type RequestyModel } from '../services/llm'
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8787'
+const REQUESTY_API_KEY = import.meta.env.VITE_REQUESTY_API_KEY || 'sk-MbEMvUXwQpuHBM++j4KOh6Uyc1uLOdNvyAKAE1RFNq036e/fUVp9GGi16gcKUTo6An8oJ5BRh1rFbctkP4iCy/Y5tDPIWWuvhrXEyXfFvgk='
 
-type UiConfig = { cadence:'daily'|'weekly'|'monthly', time_of_day:string, days_of_week:string[], audiences:string[], require_dual_signoff:boolean, autopublish:boolean }
+type UiConfig = { 
+  cadence:'daily'|'weekly'|'monthly', 
+  time_of_day:string, 
+  days_of_week:string[], 
+  audiences:string[], 
+  require_dual_signoff:boolean, 
+  autopublish:boolean,
+  selected_model?: string
+}
 
 export default function Palette(){
   const [open, setOpen] = useState(false)
   const [cfg, setCfg] = useState<UiConfig | null>(null)
+  const [models, setModels] = useState<RequestyModel[]>([])
+  const [loadingModels, setLoadingModels] = useState(false)
   const nav = useNavigate()
   const { reset } = useStore()
+  
+  // Initialize LLM service on mount
+  useEffect(() => {
+    initializeLLMService(REQUESTY_API_KEY)
+  }, [])
 
   useEffect(()=>{
     function onKey(e: KeyboardEvent){
@@ -26,7 +43,17 @@ export default function Palette(){
     return () => window.removeEventListener('keydown', onKey)
   }, [open])
 
-  useEffect(()=>{ if(open) fetch(`${API}/config`).then(r=>r.json()).then(setCfg) }, [open])
+  useEffect(()=>{ 
+    if(open) {
+      fetch(`${API}/config`).then(r=>r.json()).then(setCfg)
+      // Fetch available models
+      setLoadingModels(true)
+      getLLMService().getModels()
+        .then(setModels)
+        .catch(console.error)
+        .finally(() => setLoadingModels(false))
+    }
+  }, [open])
 
   async function update(partial: Partial<UiConfig>){
     const r = await fetch(`${API}/config`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(partial) })
@@ -165,6 +192,84 @@ export default function Palette(){
                   </span>
                 </label>
               </div>
+            </section>
+
+            {/* AI Model Selection */}
+            <section className="bg-[#11253c]/50 rounded-xl p-5">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-cyan-300 mb-4">
+                AI Model Configuration
+              </h3>
+              {loadingModels ? (
+                <div className="text-center py-4">
+                  <div className="animate-pulse">Loading available models...</div>
+                </div>
+              ) : models.length > 0 ? (
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-300 mb-2 block">Selected Model</label>
+                    <select 
+                      value={cfg.selected_model || ''} 
+                      onChange={(e) => update({ selected_model: e.target.value })}
+                      className="w-full bg-[#162b44] border border-cyan-900/30 rounded-lg px-4 py-2 focus:border-cyan-400 focus:outline-none transition-colors"
+                    >
+                      <option value="">Auto-select (Recommended)</option>
+                      <optgroup label="Reasoning Models">
+                        {models.filter(m => m.supports_reasoning).map(model => (
+                          <option key={model.id} value={model.id}>
+                            {model.id} - ${model.input_price}/1K tokens
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Fast Models">
+                        {models.filter(m => m.id.includes('mini') || m.id.includes('flash') || m.id.includes('haiku')).map(model => (
+                          <option key={model.id} value={model.id}>
+                            {model.id} - ${model.input_price}/1K tokens
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Standard Models">
+                        {models.filter(m => 
+                          !m.supports_reasoning && 
+                          !m.id.includes('mini') && 
+                          !m.id.includes('flash') && 
+                          !m.id.includes('haiku')
+                        ).map(model => (
+                          <option key={model.id} value={model.id}>
+                            {model.id} - ${model.input_price}/1K tokens
+                          </option>
+                        ))}
+                      </optgroup>
+                    </select>
+                  </div>
+                  {cfg.selected_model && (() => {
+                    const selectedModel = models.find(m => m.id === cfg.selected_model)
+                    return selectedModel ? (
+                      <div className="bg-[#0a1929]/50 rounded-lg p-3 text-xs space-y-1">
+                        <div className="flex justify-between">
+                          <span className="opacity-60">Context Window:</span>
+                          <span>{selectedModel.context_window.toLocaleString()} tokens</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="opacity-60">Max Output:</span>
+                          <span>{selectedModel.max_output_tokens.toLocaleString()} tokens</span>
+                        </div>
+                        {selectedModel.supports_caching && (
+                          <div className="text-green-400 text-[10px] mt-1">✓ Supports auto-caching</div>
+                        )}
+                        {selectedModel.description && (
+                          <div className="mt-2 opacity-70 italic">{selectedModel.description}</div>
+                        )}
+                      </div>
+                    ) : null
+                  })()}
+                  <div className="text-xs opacity-60 flex items-center gap-2">
+                    <span className="text-yellow-400">⚠️</span>
+                    <span>All models use Requesty.ai routing - data is NOT PRIVATE</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-sm opacity-60">No models available</div>
+              )}
             </section>
 
             {/* Quick Actions */}

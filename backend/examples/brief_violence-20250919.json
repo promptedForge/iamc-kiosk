@@ -1,0 +1,50 @@
+{
+  "id": "violence-20250919",
+  "title": "Lynching Crisis: Multiple Incidents Targeting Muslims in Rajasthan",
+  "summary": "Coordinated lynch mob attacks targeting Muslim communities across 3 districts in western Rajasthan. WhatsApp-driven mobilization with hate speech preceding physical violence. Local law enforcement failing to prevent attacks. 12 lynching incidents documented in 48 hours with 7 fatalities. Immediate intervention required to prevent further killings.",
+  "risks": [
+    "Imminent risk of violence spreading to neighboring districts",
+    "Social media-driven mob formation patterns detected",
+    "Breakdown of local law enforcement protocols",
+    "International human rights scrutiny intensifying"
+  ],
+  "opportunities": [
+    "Activate rapid response network with local NGOs",
+    "Deploy fact-checking resources to counter misinformation",
+    "Coordinate with state authorities for protective measures",
+    "Document evidence for accountability mechanisms"
+  ],
+  "recommendations": [
+    "Issue immediate safety advisory to at-risk communities",
+    "Activate 24/7 crisis monitoring team",
+    "Deploy legal aid network to affected areas",
+    "Brief international partners within 2 hours"
+  ],
+  "evidence": [
+    {
+      "source": "IAMC Field Reports",
+      "url": "https://iamc.com/field-reports",
+      "confidence": 0.92
+    },
+    {
+      "source": "Local NGO Network",
+      "url": "https://example.com/ngo-alerts",
+      "confidence": 0.88
+    },
+    {
+      "source": "Social Media Analysis",
+      "url": "https://example.com/social-monitoring",
+      "confidence": 0.79
+    },
+    {
+      "source": "Police Reports (Verified)",
+      "url": "https://example.com/police",
+      "confidence": 0.71
+    }
+  ],
+  "geo": ["IN-RJ", "IN-HR"],
+  "topic": ["violence", "religious", "crisis"],
+  "severity": "CRITICAL",
+  "time_sensitive": true,
+  "estimated_affected": 50000
+}

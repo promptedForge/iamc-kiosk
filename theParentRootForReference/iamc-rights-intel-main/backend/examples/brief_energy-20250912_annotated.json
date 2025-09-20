@@ -1,0 +1,13 @@
+{
+  "base_id": "energy-20250912",
+  "notes": [
+    {
+      "section": "summary",
+      "change": "Clarify conditional language; add 'if approved'."
+    },
+    {
+      "section": "recommendations[0]",
+      "change": "Replace 'Hold comms' with 'Publish guarded advisory'."
+    }
+  ]
+}

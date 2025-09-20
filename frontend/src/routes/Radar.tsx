@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { useEffect, useState } from 'react'
+import { useIsMobile, responsiveText, responsivePadding, responsiveGap } from '../utils/responsive'
 import '../styles/radar.css'
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8787'
@@ -19,6 +20,7 @@ interface PatternItem {
 }
 
 export default function Radar(){
+  const isMobile = useIsMobile()
   const { data } = useQuery({ queryKey: ['classify'], queryFn: async()=> (await fetch(`${API}/classify/today`)).json() })
   const nav = useNavigate()
   const { userRole, signoffs: globalSignoffs } = useStore()
@@ -129,19 +131,19 @@ export default function Radar(){
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 pointer-events-none" />
       
       {/* Since last login header */}
-      <div className="text-center pt-20 pb-8 relative z-10">
-        <h1 className="text-3xl md:text-4xl font-bold mb-2">Intelligence Brief</h1>
+      <div className={`text-center pb-8 relative z-10`}>
+        <h1 className={`${responsiveText.display} font-bold mb-2`}>Intelligence Brief</h1>
         <p className="text-lg opacity-80">Since your last login at {lastLoginTime}</p>
         <p className="text-sm opacity-60 mt-1">5 minutes to full clarity</p>
       </div>
 
       {/* Cockpit-style Analyzed Patterns Grid */}
-      <div className="px-6 md:px-16 pb-32 kiosk-padding-lg">
+      <div className={`${responsivePadding.page} ${isMobile ? 'pb-40' : 'pb-32'} kiosk-padding-lg`}>
         <div className="mb-6">
           <h2 className="text-xl font-semibold opacity-90 kiosk-text-lg">Analyzed Patterns & Trends</h2>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 perspective-1000 kiosk-grid">
+        <div className={`grid ${isMobile ? 'grid-cols-1' : 'lg:grid-cols-2'} ${responsiveGap.large} perspective-1000 kiosk-grid`}>
           {(['Policy','Industry','Advocacy','Risk'] as const).map((q, qIdx) => {
             const isLeft = qIdx % 2 === 0
             const isTop = qIdx < 2
@@ -158,12 +160,12 @@ export default function Radar(){
                   transformStyle: 'preserve-3d'
                 }}
               >
-                <div className="card p-8 bg-[#0a1929]/90 backdrop-blur-md border border-cyan-900/30 shadow-2xl min-h-[400px]">
+                <div className={`card ${responsivePadding.card} bg-[#0a1929]/90 backdrop-blur-md border border-cyan-900/30 shadow-2xl ${isMobile ? 'min-h-[300px]' : 'min-h-[400px]'}`}>
                   <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/10 to-transparent pointer-events-none rounded-lg" />
                   
                   <div className="relative z-10">
                     <div className="flex items-center justify-between mb-6">
-                      <div className="text-2xl font-bold text-cyan-100">{q}</div>
+                      <div className={`${responsiveText.headline} font-bold text-cyan-100`}>{q}</div>
                       <div className="text-xs opacity-60 uppercase text-cyan-300">Pattern Analysis</div>
                     </div>
                     
@@ -182,12 +184,12 @@ export default function Radar(){
                               className="relative"
                             >
                               <div 
-                                className="p-4 bg-[#11253c]/80 rounded-lg hover:bg-[#132a44] cursor-pointer transition-all hover:scale-[1.01] clickable-card"
+                                className={`p-4 bg-[#11253c]/80 rounded-lg hover:bg-[#132a44] cursor-pointer transition-all hover:scale-[1.01] clickable-card ${it.id === 'violence-20250919' ? 'ring-2 ring-red-500/50 bg-red-900/10' : ''}`}
                                 onClick={()=> nav(`/issue/${it.id}`)}
                               >
-                                <div className="flex justify-between items-start mb-2">
-                                  <div className="font-semibold text-sm pr-2">{it.title}</div>
-                                  <div className={`text-xs font-bold ${getPriorityColor(it.priority)} shrink-0`}>
+                                <div className={`flex ${isMobile ? 'flex-col gap-1' : 'justify-between items-start'} mb-2`}>
+                                  <div className={`font-semibold ${responsiveText.caption} pr-2`}>{it.title}</div>
+                                  <div className={`${responsiveText.micro} font-bold ${getPriorityColor(it.priority)} shrink-0`}>
                                     {it.priority?.toUpperCase()}
                                   </div>
                                 </div>
@@ -198,9 +200,9 @@ export default function Radar(){
                                   <div className="flex items-center gap-3">
                                     <div className="text-xs opacity-70">Confidence: {Math.round(it.score*100)}%</div>
                                     {/* Show hypothesis indicator for specific high-priority items */}
-                                    {(it.priority === 'critical' || it.priority === 'high') && it.id === 'farmers-20250919' && (
+                                    {(it.priority === 'critical' || it.priority === 'high') && (it.id === 'farmers-20250919' || it.id === 'violence-20250919') && (
                                       <div className="text-xs bg-purple-600/20 text-purple-400 px-2 py-0.5 rounded-full animate-pulse">
-                                        2 candidate hypotheses →
+                                        {it.id === 'violence-20250919' ? '3 critical patterns →' : '2 candidate hypotheses →'}
                                       </div>
                                     )}
                                   </div>

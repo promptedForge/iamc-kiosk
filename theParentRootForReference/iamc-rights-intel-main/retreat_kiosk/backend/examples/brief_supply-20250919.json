@@ -1,0 +1,27 @@
+{
+  "id": "supply-20250919",
+  "title": "Supplier Consolidation: Pricing & Resilience",
+  "summary": "Consolidation among key suppliers is shifting regional pricing power; members may face Q4 volatility.",
+  "risks": [
+    "Short-term price hikes",
+    "Reduced bargaining leverage",
+    "Service disruptions in two regions"
+  ],
+  "opportunities": [
+    "Pool demand via member clusters",
+    "Pilot alternative suppliers",
+    "Publish resilience guidance"
+  ],
+  "recommendations": [
+    "Form two purchasing pools",
+    "Negotiate interim caps",
+    "Open a member signal channel"
+  ],
+  "evidence": [
+    {
+      "source": "Industry Analyst Brief",
+      "url": "https://industry.example.com/consolidation",
+      "confidence": 0.76
+    }
+  ]
+}

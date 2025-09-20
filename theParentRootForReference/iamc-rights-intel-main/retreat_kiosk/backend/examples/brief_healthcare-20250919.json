@@ -1,0 +1,32 @@
+{
+  "id": "healthcare-20250919",
+  "title": "Healthcare Transparency Bill: Short-term Pressure, Long-term Trust",
+  "summary": "The bill mandates clearer pricing disclosures; near-term admin overhead but long-term member trust and negotiation leverage.",
+  "risks": [
+    "Administrative burden spikes during transition",
+    "Potential member pushback on disclosure pace",
+    "Media narratives may oversimplify"
+  ],
+  "opportunities": [
+    "Position IAMC as a practical compliance guide",
+    "Pilot a disclosure toolkit with early adopters",
+    "Negotiate grace periods via coalition"
+  ],
+  "recommendations": [
+    "Publish member explainer with scenarios",
+    "Launch office-hours for compliance questions",
+    "Collect top-10 FAQs for public site"
+  ],
+  "evidence": [
+    {
+      "source": "House Committee Docket",
+      "url": "https://example.gov/healthcare/transparency",
+      "confidence": 0.82
+    },
+    {
+      "source": "Trade Press",
+      "url": "https://news.example.com/health-transparency",
+      "confidence": 0.71
+    }
+  ]
+}

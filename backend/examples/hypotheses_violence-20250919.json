@@ -1,0 +1,104 @@
+[
+  {
+    "id": "H-VIO-001",
+    "event_id": "violence-20250919",
+    "text": "WhatsApp message velocity in local language groups shows 400% spike 6-8 hours before lynching attacks, with hate speech keywords ('revenge', 'teach them', 'gathering at') and location pins providing clear mob formation signals.",
+    "confidence": 0.89,
+    "lead_days": 0.3,
+    "factors": {
+      "source_diversity": 0.91,
+      "persistence": 0.88,
+      "effect_size": 0.92,
+      "corroboration": 0.85
+    },
+    "scope_contrib": {
+      "violence": 0.95,
+      "social_media": 0.88,
+      "law_enforcement": 0.72
+    },
+    "utility": {
+      "predictive": "6-8 hour advance warning enables preventive deployment",
+      "mapping": "Identifies violence hotspots before mob formation"
+    },
+    "provenance": [
+      {
+        "source": "WhatsApp monitoring system",
+        "url": "https://example.com/whatsapp-analysis",
+        "confidence": 0.90
+      },
+      {
+        "source": "Telegram group analysis",
+        "url": "https://example.com/telegram",
+        "confidence": 0.85
+      }
+    ]
+  },
+  {
+    "id": "H-VIO-002",
+    "event_id": "violence-20250919",
+    "text": "Police deployment patterns show 60% reduction in Muslim-majority area patrols 24-48 hours before lynching incidents, indicating systematic withdrawal of protection before attacks.",
+    "confidence": 0.76,
+    "lead_days": 1.5,
+    "factors": {
+      "source_diversity": 0.74,
+      "persistence": 0.78,
+      "effect_size": 0.81,
+      "corroboration": 0.71
+    },
+    "scope_contrib": {
+      "law_enforcement": 0.89,
+      "violence": 0.83,
+      "governance": 0.77
+    },
+    "utility": {
+      "predictive": "Patrol reduction patterns indicate imminent risk",
+      "mapping": "Identifies areas of law enforcement failure"
+    },
+    "provenance": [
+      {
+        "source": "Police deployment logs",
+        "url": "https://example.com/police-deployment",
+        "confidence": 0.75
+      },
+      {
+        "source": "Community watch reports",
+        "url": "https://example.com/community",
+        "confidence": 0.77
+      }
+    ]
+  },
+  {
+    "id": "H-VIO-003",
+    "event_id": "violence-20250919",
+    "text": "Local hospital emergency supply orders for trauma kits increase 200% in specific districts 3-5 days before lynching attacks, indicating healthcare system awareness of planned violence against Muslims.",
+    "confidence": 0.68,
+    "lead_days": 4,
+    "factors": {
+      "source_diversity": 0.65,
+      "persistence": 0.69,
+      "effect_size": 0.73,
+      "corroboration": 0.66
+    },
+    "scope_contrib": {
+      "healthcare": 0.82,
+      "violence": 0.71,
+      "logistics": 0.68
+    },
+    "utility": {
+      "predictive": "Medical preparation indicates violence planning",
+      "mapping": "Identifies districts with insider knowledge"
+    },
+    "provenance": [
+      {
+        "source": "Medical supply chain data",
+        "url": "https://example.com/medical-supplies",
+        "confidence": 0.70
+      },
+      {
+        "source": "Hospital procurement records",
+        "url": "https://example.com/hospital-data",
+        "confidence": 0.66
+      }
+    ]
+  }
+]
