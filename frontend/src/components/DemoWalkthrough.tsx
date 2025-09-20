@@ -22,7 +22,7 @@ export default function DemoWalkthrough() {
     {
       route: '/',
       duration: 3000,
-      actions: () => reset(),
+      actions: undefined, // Don't call reset here, it's already done in startDemo
       description: 'Welcome screen'
     },
     {
@@ -120,9 +120,8 @@ export default function DemoWalkthrough() {
       route: '/export/latest',
       duration: 6000,
       actions: () => {
-        // Reset and switch to Strategy Head
+        // Switch to Strategy Head
         setTimeout(() => {
-          reset()
           setUserRole('Strategy Head')
           navigate('/radar')
         }, 2000)
@@ -163,8 +162,11 @@ export default function DemoWalkthrough() {
     setIsRunning(false)
     setCurrentStep(0)
     setProgress(0)
-    reset()
-    navigate('/')
+    // Defer reset to avoid state update during render
+    setTimeout(() => {
+      reset()
+      navigate('/')
+    }, 0)
   }, [navigate, reset])
 
   // Run demo steps
@@ -206,11 +208,14 @@ export default function DemoWalkthrough() {
 
   // Start demo function
   const startDemo = () => {
-    reset()
-    setIsRunning(true)
-    setCurrentStep(0)
-    setProgress(0)
-    navigate('/')
+    // Defer all state updates to avoid React error
+    setTimeout(() => {
+      reset()
+      setIsRunning(true)
+      setCurrentStep(0)
+      setProgress(0)
+      navigate('/')
+    }, 0)
   }
 
   return (
