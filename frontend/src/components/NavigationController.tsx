@@ -13,7 +13,11 @@ export default function NavigationController() {
     
     if (direction === 'forward') {
       if (path === '/') navigate('/radar')
-      else if (path.startsWith('/radar')) navigate('/issue/farmers-20250919')
+      else if (path.startsWith('/radar')) {
+        // Navigate to the first issue from mock data
+        // Using a default ID that exists in our mock data
+        navigate('/issue/farmers-20250919')
+      }
       else if (path.startsWith('/issue')) navigate('/roi')
       else if (path.startsWith('/roi')) navigate('/export/latest')
     } else {
@@ -50,12 +54,10 @@ export default function NavigationController() {
               <div />
               <button 
                 onClick={() => navigate('/tweaks')}
-                className="bg-cyan-900/50 hover:bg-cyan-800 rounded-lg p-3 transition-all"
+                className="bg-purple-600/70 hover:bg-purple-600 rounded-lg px-3 py-2 transition-all text-xs font-medium"
                 title="Tweaks"
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                </svg>
+                Tweaks
               </button>
               <div />
               
@@ -132,3 +134,18 @@ export default function NavigationController() {
     </button>
   )
 }
+
+/**
+ * App Screens Overview:
+ * 
+ * 1. "/" - Framing (Login/Role Selection)
+ * 2. "/radar" - Main Intelligence Dashboard
+ * 3. "/issue/:id" - Issue Detail/Brief Editor
+ * 4. "/roi" - ROI Analysis
+ * 5. "/export/:id" - Export Package
+ * 6. "/tweaks" - Learning Loop/Upload Previous Reports
+ * 
+ * The navigation flows like a slideshow:
+ * Login → Radar → Issue → ROI → Export
+ * With Tweaks accessible from anywhere via the controller
+ */

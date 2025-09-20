@@ -12,10 +12,14 @@ export default function Issue(){
   const [editableContent, setEditableContent] = useState<Record<string, any>>({})
   const [isGenerating, setIsGenerating] = useState(false)
   
-  const { data: brief } = useQuery({ 
+  const { data: brief, error, isLoading } = useQuery({ 
     queryKey: ['brief', id], 
     queryFn: async() => {
-      const data = await (await fetch(`${API}/brief/${id}`)).json()
+      const response = await fetch(`${API}/brief/${id}`)
+      if (!response.ok) {
+        throw new Error('Brief not found')
+      }
+      const data = await response.json()
       setEditableContent(prev => ({
         ...prev,
         summary: data.summary,
@@ -30,19 +34,33 @@ export default function Issue(){
   const { data: lensBrief } = useQuery({ 
     queryKey: ['lens', id, lens], 
     queryFn: async() => {
-      const data = await (await fetch(`${API}/brief/${id}?lens=${lens}`)).json()
+      const response = await fetch(`${API}/brief/${id}?lens=${lens}`)
+      if (!response.ok) return null
+      const data = await response.json()
       setEditableContent(prev => ({
         ...prev,
         [`actions_${lens}`]: [...data.actions],
         [`talking_points_${lens}`]: [...data.talking_points]
       }))
       return data
-    }
+    },
+    enabled: !!brief // Only run if brief exists
   })
   
   const [assets, setAssets] = useState<any>(null)
   
-  if(!brief) return <div className="grid place-items-center h-screen">Loading…</div>
+  if (isLoading) return <div className="grid place-items-center h-screen">Loading…</div>
+  
+  if (error || !brief) {
+    return (
+      <div className="grid place-items-center h-screen">
+        <div className="text-center">
+          <div className="text-xl mb-4">Brief not found</div>
+          <button className="btn" onClick={() => nav('/radar')}>Back to Radar</button>
+        </div>
+      </div>
+    )
+  }
 
   async function genAssets(){
     setIsGenerating(true)
