@@ -186,10 +186,10 @@ async fn export_zip(State(st): State<AppState>, Path(id): Path<String>) -> Resul
         return Err((StatusCode::CONFLICT, "Export blocked: Human interrupt active".into()));
     }
     if cfg_ui.require_dual_signoff {
-        let a = rstate.signoff.get("Analyst").copied().unwrap_or(false);
+        let a = rstate.signoff.get("Media Team").copied().unwrap_or(false);
         let s = rstate.signoff.get("Strategy Head").copied().unwrap_or(false);
         if !(a && s) {
-            return Err((StatusCode::FORBIDDEN, "Export blocked: Dual signoff required".into()));
+            return Err((StatusCode::FORBIDDEN, "Export blocked: Dual signoff required (Media Team and Strategy Head)".into()));
         }
     }
     use std::io::Read;

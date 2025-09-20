@@ -48,15 +48,35 @@ This document tracks shortcuts taken in the demo/kiosk track that need to be add
 - **Where**: `frontend/src/routes/Issue.tsx` hypothesis panel
 - **Recall**: Add real-time confidence updates based on new signals
 
+### 9. Export Formats Mock (D3)
+- **What**: Export format options (PDF, CSV, JSON) are UI-only
+- **Where**: `frontend/src/routes/Issue.tsx` lines 434-441, `frontend/src/routes/Export.tsx`
+- **Recall**: Implement actual format conversion in backend
+- **Impact**: Low - ZIP export works, other formats need implementation
+
+### 10. Export Gate Hardcoded Roles (D3)
+- **What**: Export validation checks for hardcoded "Media Team" role
+- **Where**: `backend/api/src/main.rs` lines 189-193
+- **Recall**: Load roles dynamically from roles.v1.json contract
+- **Note**: Fixed from "Analyst" to "Media Team" but still hardcoded
+
+### 11. CSS Variables for Production Polish (D3)
+- **What**: Added CSS custom properties for consistent theming
+- **Where**: `frontend/src/index.css` lines 2-15
+- **Recall**: Consider dark/light theme switching in production
+- **Impact**: Low - improves maintainability
+
 ## Recall Priority
 
 1. **High**: Hypotheses generation (blocking for real anomaly detection)
 2. **High**: Hypothesis state management (needed for learning loop)
-3. **Medium**: Dynamic role loading from contracts
-4. **Medium**: Lens-specific content generation
-5. **Low**: Evidence link integration
-6. **Low**: Data Scientist backend features
-7. **Low**: Data Scientist backend features
+3. **High**: Export format implementations (PDF, CSV, JSON)
+4. **Medium**: Dynamic role loading from contracts
+5. **Medium**: Lens-specific content generation
+6. **Medium**: Dynamic hypothesis counts in radar
+7. **Low**: Evidence link integration
+8. **Low**: Data Scientist backend features
+9. **Low**: Theme switching system
 
 ## Notes
 
