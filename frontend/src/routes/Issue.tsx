@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useState, useEffect } from 'react'
 import { useIsMobile, responsiveText, responsivePadding, responsiveGap } from '../utils/responsive'
 import { getLLMService, initializeLLMService } from '../services/llm'
+import { reportGenerator, type GeneratedReport } from '../services/reportGenerator'
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8787'
 const REQUESTY_API_KEY = import.meta.env.VITE_REQUESTY_API_KEY || 'sk-MbEMvUXwQpuHBM++j4KOh6Uyc1uLOdNvyAKAE1RFNq036e/fUVp9GGi16gcKUTo6An8oJ5BRh1rFbctkP4iCy/Y5tDPIWWuvhrXEyXfFvgk='
@@ -86,6 +87,8 @@ export default function Issue(){
   })
   
   const [assets, setAssets] = useState<any>(null)
+  const [fullReport, setFullReport] = useState<GeneratedReport | null>(null)
+  const [isGeneratingReport, setIsGeneratingReport] = useState(false)
   const [showHypotheses, setShowHypotheses] = useState(true)
   const [exportFormat, setExportFormat] = useState<'zip' | 'pdf' | 'csv' | 'json'>('zip')
   const [isExporting, setIsExporting] = useState(false)
@@ -122,91 +125,67 @@ export default function Issue(){
     setIsGenerating(true)
     
     try {
-      const llm = getLLMService()
-      const model = selectedModel || 'anthropic/claude-sonnet-4-20250514-1m'
-      
-      const prompt = `Generate professional communication assets for the following intelligence brief:
-
-Title: ${brief.title}
-Summary: ${editableContent.summary || brief.summary}
-Risks: ${(editableContent.risks || brief.risks).join(', ')}
-Opportunities: ${(editableContent.opportunities || brief.opportunities).join(', ')}
-Recommendations: ${(editableContent.recommendations || brief.recommendations).join(', ')}
-Audience: ${audience}
-Lens: ${lens.toUpperCase()}
-
-Generate:
-1. LinkedIn post (professional, concise, with relevant hashtags)
-2. Email paragraph for internal team (action-oriented, specific next steps)
-3. Press excerpt (neutral tone, factual)
-
-Return ONLY a valid JSON object with exactly these keys:
-{
-  "linkedin": "LinkedIn post content here",
-  "email_paragraph": "Email paragraph content here",
-  "press_excerpt": "Press excerpt content here"
-}`
-
-      console.log('Generating assets with model:', model)
-      const response = await llm.createChatCompletion({
-        model,
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a strategic communications expert for a human rights intelligence organization. Generate clear, actionable content. Always respond with valid JSON only, no additional text or markdown.'
-          },
-          {
-            role: 'user',
-            content: prompt
-          }
-        ],
-        temperature: 0.7,
-        max_tokens: 1024
-      })
-      
-      console.log('LLM response:', response)
-      
-      try {
-        // Clean the response in case of markdown formatting
-        let content = response.choices[0].message.content.trim()
-        // Remove markdown code blocks if present
-        content = content.replace(/^```json\n?/, '').replace(/\n?```$/, '')
-        // Parse the JSON
-        const generatedAssets = JSON.parse(content)
-        setAssets(generatedAssets)
-      } catch (parseError) {
-        console.error('Failed to parse LLM response:', parseError, response.choices[0].message.content)
-        // Try to extract content using regex as fallback
-        const content = response.choices[0].message.content
-        const linkedinMatch = content.match(/"linkedin"\s*:\s*"([^"]*)"/)
-        const emailMatch = content.match(/"email_paragraph"\s*:\s*"([^"]*)"/)
-        const pressMatch = content.match(/"press_excerpt"\s*:\s*"([^"]*)"/)
-        
-        if (linkedinMatch && emailMatch && pressMatch) {
-          setAssets({
-            linkedin: linkedinMatch[1].replace(/\\n/g, '\n'),
-            email_paragraph: emailMatch[1].replace(/\\n/g, '\n'),
-            press_excerpt: pressMatch[1].replace(/\\n/g, '\n')
-          })
-        } else {
-          // Ultimate fallback
-          setAssets({
-            linkedin: `${brief.title}\n\nKey insights:\n• ${editableContent.risks?.[0] || brief.risks[0]}\n• ${editableContent.opportunities?.[0] || brief.opportunities[0]}\n\n#HumanRights #IntelligenceBrief`,
-            email_paragraph: `Team,\n\nRegarding ${brief.title}: ${editableContent.summary || brief.summary}\n\nRecommended actions: ${editableContent[`actions_${lens}`]?.[0] || lensBrief?.actions[0] || 'Monitor situation'}`,
-            press_excerpt: `${brief.title}. ${editableContent.summary || brief.summary}`
-          })
-        }
+      // Generate full report first
+      const reportData = {
+        brief: {
+          ...brief,
+          summary: editableContent.summary || brief.summary,
+          risks: editableContent.risks || brief.risks,
+          opportunities: editableContent.opportunities || brief.opportunities,
+          recommendations: editableContent.recommendations || brief.recommendations
+        },
+        hypotheses: hypotheses || [],
+        lensBrief: lensBrief ? {
+          ...lensBrief,
+          actions: editableContent[`actions_${lens}`] || lensBrief.actions,
+          talking_points: editableContent[`talking_points_${lens}`] || lensBrief.talking_points
+        } : null
       }
+      
+      console.log('Generating comprehensive report...')
+      const report = await reportGenerator.generateReport(
+        reportData,
+        audience,
+        selectedModel || 'anthropic/claude-sonnet-4-20250514-1m'
+      )
+      
+      setFullReport(report)
+      
+      // Extract communication assets from the report
+      const commsStrategy = report.communication_strategy
+      const actionItems = report.action_items.immediate
+      
+      setAssets({
+        linkedin: `${brief.title}\n\n${report.executive_summary.split('.')[0]}.\n\nKey insights:\n${brief.risks.slice(0, 2).map(r => `• ${r}`).join('\n')}\n\n${commsStrategy.external}\n\n#HumanRights #IntelligenceBrief #${brief.topic?.[0] || 'GlobalImpact'}`,
+        email_paragraph: `${commsStrategy.internal}\n\nImmediate actions:\n${actionItems.slice(0, 3).map(a => `• ${a}`).join('\n')}\n\n${report.recommendations.split('.')[0]}.`,
+        press_excerpt: `${commsStrategy.media}\n\n${report.situational_analysis.split('.')[0]}.`
+      })
     } catch (error) {
-      console.error('Error generating assets:', error)
-      // Fallback to template
+      console.error('Error generating report:', error)
+      // Fallback to simple asset generation
       setAssets({
         linkedin: `${brief.title}\n\nKey insights:\n• ${editableContent.risks?.[0] || brief.risks[0]}\n• ${editableContent.opportunities?.[0] || brief.opportunities[0]}\n\n#HumanRights #IntelligenceBrief`,
-        email_paragraph: `Team,\n\nThe draft introduces phased compliance that raises near-term uncertainty but opens avenues for pilot program funding.\n\nRecommended actions today: ${editableContent[`actions_${lens}`]?.[0] || lensBrief?.actions[0] || 'Publish neutral explainer within 2 hours'}`,
-        press_excerpt: `${brief.title}. Immediate implications: ${editableContent.summary || brief.summary}`
+        email_paragraph: `Team,\n\nRegarding ${brief.title}: ${editableContent.summary || brief.summary}\n\nRecommended actions: ${editableContent[`actions_${lens}`]?.[0] || lensBrief?.actions[0] || 'Monitor situation'}`,
+        press_excerpt: `${brief.title}. ${editableContent.summary || brief.summary}`
       })
     } finally {
       setIsGenerating(false)
+    }
+  }
+  
+  async function generateFullReport() {
+    setIsGeneratingReport(true)
+    try {
+      const report = await reportGenerator.generateReport(
+        { brief, hypotheses, lensBrief },
+        audience,
+        selectedModel
+      )
+      setFullReport(report)
+    } catch (error) {
+      console.error('Failed to generate full report:', error)
+    } finally {
+      setIsGeneratingReport(false)
     }
   }
 
@@ -494,7 +473,7 @@ Return ONLY a valid JSON object with exactly these keys:
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
-                    Generate
+                    Generate Report
                   </span>
                 )}
               </button>
@@ -535,6 +514,106 @@ Return ONLY a valid JSON object with exactly these keys:
             </div>
           )}
         </div>
+
+        {/* Full Intelligence Report Section */}
+        {fullReport && (
+          <div className="card p-6 bg-gradient-to-br from-[#0a1929] to-[#11253c] border-2 border-cyan-900/50">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-lg flex items-center gap-2">
+                <svg className="w-5 h-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Full Intelligence Report
+              </h3>
+              <button 
+                onClick={() => setFullReport(null)} 
+                className="text-gray-400 hover:text-gray-200"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className="space-y-6 max-h-[600px] overflow-y-auto">
+              <section>
+                <h4 className="font-semibold text-cyan-300 mb-2">Executive Summary</h4>
+                <p className="text-sm opacity-90 whitespace-pre-wrap">{fullReport.executive_summary}</p>
+              </section>
+              
+              <section>
+                <h4 className="font-semibold text-cyan-300 mb-2">Situational Analysis</h4>
+                <p className="text-sm opacity-90 whitespace-pre-wrap">{fullReport.situational_analysis}</p>
+              </section>
+              
+              <section>
+                <h4 className="font-semibold text-cyan-300 mb-2">Risk Assessment</h4>
+                <p className="text-sm opacity-90 whitespace-pre-wrap">{fullReport.risk_assessment}</p>
+              </section>
+              
+              <section>
+                <h4 className="font-semibold text-cyan-300 mb-2">Action Items</h4>
+                <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-3'} gap-4`}>
+                  <div className="bg-[#0a1929]/50 rounded-lg p-3">
+                    <h5 className="font-semibold text-xs text-red-400 mb-1">Immediate (24h)</h5>
+                    <ul className="text-xs opacity-80 space-y-1">
+                      {fullReport.action_items.immediate.map((item, i) => (
+                        <li key={i}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="bg-[#0a1929]/50 rounded-lg p-3">
+                    <h5 className="font-semibold text-xs text-yellow-400 mb-1">Short-term (7d)</h5>
+                    <ul className="text-xs opacity-80 space-y-1">
+                      {fullReport.action_items.short_term.map((item, i) => (
+                        <li key={i}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="bg-[#0a1929]/50 rounded-lg p-3">
+                    <h5 className="font-semibold text-xs text-green-400 mb-1">Medium-term (30d)</h5>
+                    <ul className="text-xs opacity-80 space-y-1">
+                      {fullReport.action_items.medium_term.map((item, i) => (
+                        <li key={i}>• {item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </section>
+              
+              <section>
+                <h4 className="font-semibold text-cyan-300 mb-2">Hypothesis Evaluation</h4>
+                <p className="text-sm opacity-90 whitespace-pre-wrap">{fullReport.hypothesis_evaluation}</p>
+              </section>
+            </div>
+            
+            <div className="mt-4 flex gap-2">
+              <button 
+                onClick={() => {
+                  const markdown = reportGenerator.formatReportAsMarkdown(fullReport, { 
+                    classification: 'Internal Use Only',
+                    generated_by: audience,
+                    issue_id: id 
+                  })
+                  const blob = new Blob([markdown], { type: 'text/markdown' })
+                  const url = URL.createObjectURL(blob)
+                  const a = document.createElement('a')
+                  a.href = url
+                  a.download = `intelligence_report_${id}_${new Date().toISOString().split('T')[0]}.md`
+                  a.click()
+                  URL.revokeObjectURL(url)
+                }}
+                className="btn bg-cyan-600 hover:bg-cyan-700"
+              >
+                Download Report
+              </button>
+              <button 
+                onClick={() => navigator.clipboard.writeText(reportGenerator.formatReportAsMarkdown(fullReport, { classification: 'Internal Use Only' }))}
+                className="btn bg-purple-600 hover:bg-purple-700"
+              >
+                Copy to Clipboard
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Export Gate Section */}
         <div className="card p-4 bg-gradient-to-br from-[#0f2236] to-[#0a1929] border-2 border-cyan-900/50">
