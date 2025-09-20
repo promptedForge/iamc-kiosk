@@ -37,6 +37,17 @@ This document tracks shortcuts taken in the demo/kiosk track that need to be add
 - **Where**: Frontend only - no backend integration
 - **Recall**: Implement read-only metrics access for Data Scientist role
 
+### 7. Hardcoded Hypothesis Indicator (D2)
+- **What**: Hypothesis count indicator hardcoded for farmers-20250919
+- **Where**: `frontend/src/routes/Radar.tsx` line 201-204
+- **Recall**: Dynamically fetch hypothesis counts for all issues
+- **Impact**: Low - works for demo but not dynamic
+
+### 8. Static Confidence Bars (D2)
+- **What**: Hypothesis confidence visualization uses static percentages
+- **Where**: `frontend/src/routes/Issue.tsx` hypothesis panel
+- **Recall**: Add real-time confidence updates based on new signals
+
 ## Recall Priority
 
 1. **High**: Hypotheses generation (blocking for real anomaly detection)
@@ -45,9 +56,11 @@ This document tracks shortcuts taken in the demo/kiosk track that need to be add
 4. **Medium**: Lens-specific content generation
 5. **Low**: Evidence link integration
 6. **Low**: Data Scientist backend features
+7. **Low**: Data Scientist backend features
 
 ## Notes
 
 - All shortcuts are isolated to mock mode (`--mock` flag)
 - Production code paths exist but return empty/default responses
 - Schema contracts are in place to prevent drift during recall
+- UI components are built to handle dynamic data when available
