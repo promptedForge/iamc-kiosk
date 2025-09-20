@@ -20,7 +20,18 @@ const router = createBrowserRouter([{ path: '/', element: <App />, children: [
   { path: 'tweaks', element: <Tweaks /> },
 ]}])
 
-const qc = new QueryClient()
+const qc = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchInterval: 30000, // Refetch every 30 seconds
+      refetchIntervalInBackground: true,
+      refetchOnWindowFocus: true,
+      staleTime: 20000, // Consider data stale after 20 seconds
+      retry: 2,
+    },
+  },
+})
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={qc}><RouterProvider router={router} /></QueryClientProvider>

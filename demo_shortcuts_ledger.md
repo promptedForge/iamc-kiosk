@@ -66,6 +66,36 @@ This document tracks shortcuts taken in the demo/kiosk track that need to be add
 - **Recall**: Consider dark/light theme switching in production
 - **Impact**: Low - improves maintainability
 
+### 12. Kiosk Idle Timeout Hardcoded (D4)
+- **What**: Idle timeout set to 5 minutes, warning at 4 minutes
+- **Where**: `frontend/src/routes/App.tsx` lines 16-17
+- **Recall**: Make timeout configurable via settings/env
+- **Impact**: Medium - works for demo but not customizable
+
+### 13. Auto-refresh Intervals Static (D4)
+- **What**: Query refresh intervals hardcoded to 30 seconds
+- **Where**: `frontend/src/main.tsx` lines 26-29
+- **Recall**: Allow configuration per query or global setting
+- **Impact**: Low - reasonable defaults for demo
+
+### 14. Kiosk Navigation Shortcuts (D4)
+- **What**: Number keys 1-9 navigate to hardcoded routes
+- **Where**: `frontend/src/routes/App.tsx` lines 96-100
+- **Recall**: Load routes dynamically from router config
+- **Impact**: Low - works for current route structure
+
+### 15. Touch Mode Not Implemented (D4)
+- **What**: Touch-friendly CSS defined but not applied conditionally
+- **Where**: `frontend/src/styles/radar.css` lines 47-56
+- **Recall**: Detect touch devices and apply styles dynamically
+- **Impact**: Low - CSS is ready but needs JS integration
+
+### 16. Kiosk Config Component Unused (D4)
+- **What**: Created KioskConfig component but not integrated
+- **Where**: `frontend/src/components/KioskConfig.tsx`
+- **Recall**: Wire up to settings button and persist config
+- **Impact**: Medium - UI exists but no functionality
+
 ## Recall Priority
 
 1. **High**: Hypotheses generation (blocking for real anomaly detection)
