@@ -83,6 +83,8 @@ export default function Issue(){
   
   const [assets, setAssets] = useState<any>(null)
   const [showHypotheses, setShowHypotheses] = useState(true)
+  const [exportFormat, setExportFormat] = useState<'zip' | 'pdf' | 'csv' | 'json'>('zip')
+  const [isExporting, setIsExporting] = useState(false)
   
   if (isLoading) return <div className="grid place-items-center h-screen">Loading…</div>
   
@@ -136,6 +138,33 @@ export default function Issue(){
       console.log(`${action} hypothesis ${hypothesisId}`)
     } catch (err) {
       console.error('Failed to perform hypothesis action:', err)
+    }
+  }
+
+  const handleExport = async () => {
+    setIsExporting(true)
+    try {
+      const endpoint = exportFormat === 'zip' ? `/export/${id}` : `/export/${id}?format=${exportFormat}`
+      const response = await fetch(`${API}${endpoint}`, { method: 'POST' })
+      
+      if (!response.ok) {
+        const errorText = await response.text()
+        alert(errorText)
+        return
+      }
+      
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `iamc_export_${id}.${exportFormat}`
+      a.click()
+      setTimeout(() => URL.revokeObjectURL(url), 2000)
+    } catch (err) {
+      console.error('Export failed:', err)
+      alert('Export failed. Please try again.')
+    } finally {
+      setIsExporting(false)
     }
   }
 
@@ -384,6 +413,89 @@ export default function Issue(){
           )}
           <div className="mt-4 text-xs opacity-50">
             Note: Local AI models and API integration planned for future release. Currently using template-based generation.
+          </div>
+        </div>
+
+        {/* Export Gate Section */}
+        <div className="card p-4 bg-gradient-to-br from-[#0f2236] to-[#0a1929] border-2 border-cyan-900/50">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="font-semibold text-lg flex items-center gap-2">
+                <svg className="w-5 h-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V2" />
+                </svg>
+                Export Intelligence Package
+              </h3>
+              <p className="text-sm opacity-60 mt-1">Export requires dual sign-off when enabled</p>
+            </div>
+            <div className="flex items-center gap-3">
+              {/* Format selector */}
+              <select
+                value={exportFormat}
+                onChange={(e) => setExportFormat(e.target.value as typeof exportFormat)}
+                className="bg-[#11253c] px-3 py-2 rounded-lg text-sm border border-cyan-900/30 focus:border-cyan-400/50 transition-colors"
+              >
+                <option value="zip">ZIP Package</option>
+                <option value="pdf">PDF Report</option>
+                <option value="csv">CSV Data</option>
+                <option value="json">JSON Export</option>
+              </select>
+              
+              <button
+                onClick={handleExport}
+                disabled={isExporting}
+                className="btn bg-gradient-to-r from-cyan-600 to-cyan-700 hover:from-cyan-700 hover:to-cyan-800 disabled:opacity-50 disabled:cursor-not-allowed px-6 py-2 font-semibold shadow-lg"
+              >
+                {isExporting ? (
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Exporting...
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Export {exportFormat.toUpperCase()}
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-3 gap-4 mt-4 text-sm">
+            <div className="bg-[#11253c]/50 rounded-lg p-3">
+              <div className="font-semibold text-cyan-300 mb-1">Included in Export</div>
+              <ul className="space-y-1 text-xs opacity-70">
+                <li>• Full intelligence brief</li>
+                <li>• Evidence & hypotheses</li>
+                <li>• Generated assets</li>
+                <li>• Audit trail</li>
+              </ul>
+            </div>
+            
+            <div className="bg-[#11253c]/50 rounded-lg p-3">
+              <div className="font-semibold text-cyan-300 mb-1">Export Formats</div>
+              <ul className="space-y-1 text-xs opacity-70">
+                <li>• ZIP: Complete package</li>
+                <li>• PDF: Formatted report</li>
+                <li>• CSV: Data tables</li>
+                <li>• JSON: Structured data</li>
+              </ul>
+            </div>
+            
+            <div className="bg-[#11253c]/50 rounded-lg p-3">
+              <div className="font-semibold text-cyan-300 mb-1">Requirements</div>
+              <ul className="space-y-1 text-xs opacity-70">
+                <li>• Media Team sign-off</li>
+                <li>• Strategy Head sign-off</li>
+                <li>• No active interrupt</li>
+                <li>• Valid export window</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>

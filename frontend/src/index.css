@@ -1,10 +1,49 @@
 @tailwind base; @tailwind components; @tailwind utilities;
-:root { --ring: #7DD3FC; }
-body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
-.card { background: #0f2236; border-radius: 16px; border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
-.btn { padding: 10px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: #162b44; }
-.btn:hover { background: #1b334f; }
+:root { 
+  --ring: #06b6d4;
+  --primary: #06b6d4;
+  --primary-dark: #0891b2;
+  --secondary: #a855f7;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --card-bg: #0f2236;
+  --card-bg-alt: #11253c;
+  --card-border: rgba(6, 182, 212, 0.15);
+  --text-primary: #f3f4f6;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+}
+body { 
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; 
+  color: var(--text-primary);
+  background-color: #030712;
+}
+.card { 
+  background: var(--card-bg); 
+  border-radius: 16px; 
+  border: 1px solid var(--card-border); 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35); 
+}
+.btn { 
+  padding: 10px 16px; 
+  border-radius: 12px; 
+  border: 1px solid rgba(255,255,255,0.12); 
+  background: #162b44;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+.btn:hover { 
+  background: #1b334f;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
 .kb { position: fixed; bottom: 16px; right: 16px; opacity: 0.7; font-size: 12px; }
+/* Animations */
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -15,3 +54,58 @@ body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, I
   50% { opacity: 0.5; }
 }
 .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+/* Production-ready utility classes */
+.glass-morphism {
+  background: rgba(15, 34, 54, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+}
+
+.text-gradient {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.shadow-glow {
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+}
+
+.btn-primary {
+  background: linear-gradient(to right, var(--primary), var(--primary-dark));
+  border: 1px solid var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(to right, var(--primary-dark), #065f46);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+}
+
+.btn-danger {
+  background: var(--danger);
+  border: 1px solid var(--danger);
+  color: white;
+}
+
+.btn-secondary {
+  background: var(--secondary);
+  border: 1px solid var(--secondary);
+  color: white;
+}
+
+/* Focus states for accessibility */
+.btn:focus-visible,
+.card:focus-within {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Smooth transitions */
+* {
+  transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
