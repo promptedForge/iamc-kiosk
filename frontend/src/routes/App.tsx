@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import ReviewBar from '../components/ReviewBar'
 import Palette from '../components/Palette'
 import NavigationController from '../components/NavigationController'
+import DemoWalkthrough from '../components/DemoWalkthrough'
 import { useStore } from '../store'
 
 export default function App(){
@@ -31,6 +32,7 @@ export default function App(){
       <ReviewBar />
       <Palette />
       <NavigationController />
+      <DemoWalkthrough />
       <Outlet />
       
       {/* Bottom left controls */}
