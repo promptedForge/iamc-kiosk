@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
+import { useIsMobile, responsiveText, responsivePadding, responsiveGap } from '../utils/responsive'
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:8787'
 
@@ -29,6 +30,7 @@ interface Hypothesis {
 }
 
 export default function Issue(){
+  const isMobile = useIsMobile()
   const { id } = useParams()
   const nav = useNavigate()
   const [lens, setLens] = useState<'ceo'|'coo'|'director'>('ceo')
@@ -169,11 +171,11 @@ export default function Issue(){
   }
 
   return (
-    <div className="min-h-screen px-10 py-20 bg-[radial-gradient(1000px_600px_at_10%_10%,#12345633,transparent)]">
-      <div className="max-w-5xl mx-auto space-y-6">
-        <div className="flex items-start justify-between mb-4">
+    <div className={`min-h-screen ${responsivePadding.page} ${isMobile ? 'pt-24' : 'pt-20'} bg-[radial-gradient(1000px_600px_at_10%_10%,#12345633,transparent)]`}>
+      <div className={`${isMobile ? 'max-w-full' : 'max-w-5xl'} mx-auto ${responsiveGap.medium} flex flex-col`}>
+        <div className={`flex ${isMobile ? 'flex-col gap-4' : 'items-start justify-between'} mb-4`}>
           <div className="flex-1">
-            <div className="text-3xl font-extrabold mb-3">{brief.title}</div>
+            <div className={`${responsiveText.title} font-extrabold mb-3 ${isMobile ? 'pr-2' : ''}`}>{brief.title}</div>
             
             {/* Evidence strip */}
             {brief.evidence && brief.evidence.length > 0 && (
@@ -217,7 +219,7 @@ export default function Issue(){
           </button>
         </div>
 
-        <div className="grid grid-cols-3 gap-6">
+        <div className={`grid ${isMobile ? 'grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'} ${responsiveGap.medium}`}>
           <EditableCard 
             title="Risks" 
             items={editableContent.risks || brief.risks}
@@ -255,7 +257,7 @@ export default function Issue(){
               <div className="space-y-4">
                 {hypotheses.map((hyp) => (
                   <div key={hyp.id} className="bg-[#0a1929] rounded-lg p-4 space-y-3">
-                    <div className="flex justify-between items-start">
+                    <div className={`flex ${isMobile ? 'flex-col gap-3' : 'justify-between items-start'}`}>
                       <div className="flex-1">
                         <p className="text-sm mb-2">{hyp.text}</p>
                         
@@ -289,7 +291,7 @@ export default function Issue(){
                         </div>
                       </div>
                       
-                      <div className="flex gap-2 ml-4">
+                      <div className={`flex ${isMobile ? 'flex-wrap' : 'gap-2 ml-4'} gap-2`}>
                         <button 
                           onClick={() => handleHypothesisAction(hyp.id, 'pin')}
                           className="btn btn-sm bg-cyan-600 hover:bg-cyan-700"
@@ -348,7 +350,7 @@ export default function Issue(){
             ))}
           </div>
           {!!lensBrief && (
-            <div className="grid grid-cols-2 gap-4">
+            <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
               <EditableList
                 title="Actions"
                 items={editableContent[`actions_${lens}`] || lensBrief.actions}
@@ -384,7 +386,7 @@ export default function Issue(){
             </div>
           </div>
           {!!assets && (
-            <div className="grid grid-cols-3 gap-4 text-sm">
+            <div className={`grid ${isMobile ? 'grid-cols-1' : 'md:grid-cols-2 lg:grid-cols-3'} gap-4 text-sm`}>
               <div>
                 <div className="font-semibold mb-1">LinkedIn</div>
                 <textarea 
@@ -466,7 +468,7 @@ export default function Issue(){
             </div>
           </div>
           
-          <div className="grid grid-cols-3 gap-4 mt-4 text-sm">
+          <div className={`grid ${isMobile ? 'grid-cols-1' : 'md:grid-cols-3'} gap-4 mt-4 text-sm`}>
             <div className="bg-[#11253c]/50 rounded-lg p-3">
               <div className="font-semibold text-cyan-300 mb-1">Included in Export</div>
               <ul className="space-y-1 text-xs opacity-70">

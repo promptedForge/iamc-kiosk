@@ -5,6 +5,7 @@ import Palette from '../components/Palette'
 import NavigationController from '../components/NavigationController'
 import DemoWalkthrough from '../components/DemoWalkthrough'
 import { useStore } from '../store'
+import { useIsMobile } from '../utils/responsive'
 
 export default function App(){
   const nav = useNavigate()
@@ -165,44 +166,6 @@ export default function App(){
         </button>
       </div>
       
-      {/* Demo Control Hotkeys panel - positioned left of thumb controller */}
-      {(
-        <div className="fixed bottom-6 right-[calc(5rem+3.5rem+1.5rem)] bg-black/80 backdrop-blur-sm p-3 rounded-lg text-xs opacity-40 hover:opacity-80 transition-opacity z-20 border border-cyan-900/30">
-          <div className="font-semibold mb-1 text-cyan-300">Demo Control Hotkeys:</div>
-          <div className="space-y-0.5 text-gray-300">
-            <div className="flex items-center gap-2">
-              <kbd className="px-1.5 py-0.5 bg-[#162b44] rounded text-[10px]">←</kbd>
-              <span>Go back</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <kbd className="px-1.5 py-0.5 bg-[#162b44] rounded text-[10px]">→</kbd>
-              <span>Next screen</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <kbd className="px-1.5 py-0.5 bg-[#162b44] rounded text-[10px]">↑</kbd>
-              <span>Tweaks</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <kbd className="px-1.5 py-0.5 bg-[#162b44] rounded text-[10px]">↓</kbd>
-              <span>Export</span>
-            </div>
-            <div className="border-t border-cyan-900/30 mt-2 pt-2">
-              <div className="flex items-center gap-2">
-                <kbd className="px-1.5 py-0.5 bg-[#162b44] rounded text-[10px]">R</kbd>
-                <span>Reset session</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <kbd className="px-1.5 py-0.5 bg-[#162b44] rounded text-[10px]">F</kbd>
-                <span>Exit kiosk</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <kbd className="px-1.5 py-0.5 bg-[#162b44] rounded text-[10px]">ESC</kbd>
-                <span>Go back</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
